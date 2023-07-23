@@ -26,12 +26,13 @@ export class AuthService {
           bcrypt.compareSync(password, checkUser.password) ||
           password === checkUser.password
         ) {
-          const loginUser = { ...checkUser, matkhau: '' };
+          const loginUser = { ...checkUser, password: '' };
           const token = await this.jwtService.signAsync(loginUser, {
             secret: this.configService.get('KEY'),
             expiresIn: '1d',
           });
-          return successCode(res, token, 'Đăng nhập thành công');
+          const data = { user: loginUser, token: token };
+          return successCode(res, data, 'Đăng nhập thành công', 200);
         } else {
           throw new HttpException('mật khẩu không đúng!', 400);
         }
@@ -53,8 +54,13 @@ export class AuthService {
         throw new HttpException('email đã tồn tại!', 400);
       } else {
         userRegister.password = bcrypt.hashSync(password, 10);
-        await this.prisma.nguoiDung.create({ data: userRegister });
-        return successCode(res, '', 'Đăng ký thành công');
+        const newUser = {
+          ...userRegister,
+          role: 'USER',
+          avatar: '',
+        };
+        await this.prisma.nguoiDung.create({ data: newUser });
+        return successCode(res, '', 'Đăng ký thành công', 200);
       }
     } catch (err) {
       throw new HttpException(err.response, err.status);

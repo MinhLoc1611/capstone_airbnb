@@ -58,6 +58,7 @@ CREATE TABLE `NguoiDung` (
   `birthday` varchar(100) DEFAULT NULL,
   `gender` tinyint(1) DEFAULT NULL,
   `role` varchar(100) DEFAULT NULL,
+  `avatar` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
