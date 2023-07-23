@@ -51,8 +51,6 @@ export class PhongController {
     return this.phongService.getRoomPage(+pageNumber, +pageSize, keyword, res);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @Get('/:id')
   getRoomById(@Param('id') id: string, @Res() res: Response) {
     return this.phongService.getRoomById(+id, res);
