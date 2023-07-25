@@ -1,10 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { roomType } from './dto/phong.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class PhongService {
+  constructor(private jwtService: JwtService) {}
   prisma = new PrismaClient();
 
   async getRoom(res: Response) {
@@ -16,9 +18,13 @@ export class PhongService {
     }
   }
 
-  async createRoom(item: roomType, res: Response) {
+  async createRoom(token: string, item: roomType, res: Response) {
     try {
-      await this.prisma.phong.create({ data: item });
+      const user: NguoiDung | any = this.jwtService.decode(
+        token.slice(7, token.length),
+      );
+      const newRoom = { ...item, ma_nguoi_dung: user.id };
+      await this.prisma.phong.create({ data: newRoom });
       return successCode(res, '', 'Tạo phòng thuê thành công', 200);
     } catch (err) {
       throw new HttpException(err.response, err.status);
@@ -87,22 +93,32 @@ export class PhongService {
     }
   }
 
-  async updateRoom(id: number, item: roomType, res: Response) {
+  async updateRoom(token: string, id: number, item: roomType, res: Response) {
     try {
       const checkRoom = await this.prisma.phong.findFirst({
         where: { id: id },
       });
       if (checkRoom) {
-        const updateRoom = {
-          ...item,
-          id: id,
-          hinh_anh: checkRoom.hinh_anh,
-        };
-        await this.prisma.phong.update({
-          where: { id: id },
-          data: updateRoom,
-        });
-        return successCode(res, '', 'Cập nhật phòng thuê thành công', 200);
+        const user: NguoiDung | any = this.jwtService.decode(
+          token.slice(7, token.length),
+        );
+        if (checkRoom.ma_nguoi_dung === user.id) {
+          const updateRoom = {
+            ...item,
+            id: id,
+            hinh_anh: checkRoom.hinh_anh,
+          };
+          await this.prisma.phong.update({
+            where: { id: id },
+            data: updateRoom,
+          });
+          return successCode(res, '', 'Cập nhật phòng thuê thành công', 200);
+        } else {
+          throw new HttpException(
+            'Người dùng không có quyền hạn cập nhật phòng thuê này',
+            400,
+          );
+        }
       } else {
         throw new HttpException('Không tìm thấy phòng thuê', 400);
       }
@@ -111,16 +127,26 @@ export class PhongService {
     }
   }
 
-  async deleteRoom(id: number, res: Response) {
+  async deleteRoom(token: string, id: number, res: Response) {
     try {
       const checkRoom = await this.prisma.phong.findFirst({
         where: { id: id },
       });
       if (checkRoom) {
-        await this.prisma.phong.delete({
-          where: { id: id },
-        });
-        return successCode(res, '', 'Xoá Phòng thuê thành công', 200);
+        const user: NguoiDung | any = this.jwtService.decode(
+          token.slice(7, token.length),
+        );
+        if (checkRoom.ma_nguoi_dung === user.id) {
+          await this.prisma.phong.delete({
+            where: { id: id },
+          });
+          return successCode(res, '', 'Xoá Phòng thuê thành công', 200);
+        } else {
+          throw new HttpException(
+            'Người dùng không có quyền hạn xoá phòng thuê này',
+            400,
+          );
+        }
       } else {
         throw new HttpException('Không tìm thấy phòng thuê', 400);
       }
@@ -130,8 +156,9 @@ export class PhongService {
   }
 
   async uploadImgRoom(
-    file: Express.Multer.File,
+    token: string,
     maPhong: number,
+    file: Express.Multer.File,
     res: Response,
   ) {
     try {
@@ -139,12 +166,22 @@ export class PhongService {
         where: { id: maPhong },
       });
       if (checkRoom) {
-        checkRoom.hinh_anh = file.filename;
-        await this.prisma.phong.update({
-          data: checkRoom,
-          where: { id: maPhong },
-        });
-        return successCode(res, '', 'Upload hình phòng thuê thành công', 200);
+        const user: NguoiDung | any = this.jwtService.decode(
+          token.slice(7, token.length),
+        );
+        if (checkRoom.ma_nguoi_dung === user.id) {
+          checkRoom.hinh_anh = file.filename;
+          await this.prisma.phong.update({
+            data: checkRoom,
+            where: { id: maPhong },
+          });
+          return successCode(res, '', 'Upload hình phòng thuê thành công', 200);
+        } else {
+          throw new HttpException(
+            'Người dùng không có quyền hạn upload hình phòng thuê này',
+            400,
+          );
+        }
       } else {
         throw new HttpException('Không tìm thấy phòng thuê', 400);
       }

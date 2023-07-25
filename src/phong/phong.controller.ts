@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Post,
   Put,
@@ -32,8 +33,12 @@ export class PhongController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  createRoom(@Body() item: roomType, @Res() res: Response) {
-    return this.phongService.createRoom(item, res);
+  createRoom(
+    @Headers('token') token: string,
+    @Body() item: roomType,
+    @Res() res: Response,
+  ) {
+    return this.phongService.createRoom(token, item, res);
   }
 
   @Get('/lay-phong-theo-vi-tri')
@@ -60,18 +65,23 @@ export class PhongController {
   @UseGuards(AuthGuard('jwt'))
   @Put('/:id')
   updateRoom(
+    @Headers('token') token: string,
     @Param('id') id: string,
     @Body() item: roomType,
     @Res() res: Response,
   ) {
-    return this.phongService.updateRoom(+id, item, res);
+    return this.phongService.updateRoom(token, +id, item, res);
   }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
-  deleteRoom(@Param('id') id: string, @Res() res: Response) {
-    return this.phongService.deleteRoom(+id, res);
+  deleteRoom(
+    @Headers('token') token: string,
+    @Param('id') id: string,
+    @Res() res: Response,
+  ) {
+    return this.phongService.deleteRoom(token, +id, res);
   }
 
   @ApiBearerAuth()
@@ -89,10 +99,11 @@ export class PhongController {
   )
   @Post('/upload-hinh-phong')
   uploadImgRoom(
-    @UploadedFile() file: Express.Multer.File,
+    @Headers('token') token: string,
     @Query('maPhong') maPhong: string,
+    @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
   ) {
-    return this.phongService.uploadImgRoom(file, +maPhong, res);
+    return this.phongService.uploadImgRoom(token, +maPhong, file, res);
   }
 }

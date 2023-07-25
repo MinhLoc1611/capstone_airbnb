@@ -81,16 +81,19 @@ CREATE TABLE `Phong` (
   `ho_boi` tinyint(1) DEFAULT NULL,
   `hinh_anh` varchar(255) DEFAULT NULL,
   `ma_vi_tri` int DEFAULT NULL,
+  `ma_nguoi_dung` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ma_vi_tri` (`ma_vi_tri`),
-  CONSTRAINT `Phong_ibfk_1` FOREIGN KEY (`ma_vi_tri`) REFERENCES `ViTri` (`id`)
+  KEY `ma_nguoi_dung` (`ma_nguoi_dung`),
+  CONSTRAINT `Phong_ibfk_1` FOREIGN KEY (`ma_vi_tri`) REFERENCES `ViTri` (`id`),
+  CONSTRAINT `Phong_ibfk_2` FOREIGN KEY (`ma_nguoi_dung`) REFERENCES `NguoiDung` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `ViTri` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ten_vi_tri` varchar(255) DEFAULT NULL,
   `tinh_thanh` varchar(150) DEFAULT NULL,
-  `quoc_gia` int DEFAULT NULL,
+  `quoc_gia` varchar(150) DEFAULT NULL,
   `hinh_anh` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
