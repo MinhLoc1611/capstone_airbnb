@@ -1,16 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 export class datPhongDto {
   @ApiProperty()
-  id: number;
-
+  ngay_di: Date;
   @ApiProperty()
-  maPhong: number;
+  ngay_den: Date;
   @ApiProperty()
-  ngayDen: Date;
+  so_luong_khach: number;
   @ApiProperty()
-  ngayDi: Date;
+  ma_phong: number;
   @ApiProperty()
-  soLuongKhach: number;
-  @ApiProperty()
-  maNguoiDung: number;
+  ma_nguoi_dat: number;
 }
