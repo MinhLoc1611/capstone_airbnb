@@ -3,6 +3,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { binhLuanDto } from './dto/binh_luan.dto';
+import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
 export class BinhLuanService {
@@ -37,21 +38,21 @@ export class BinhLuanService {
         where: { id: id },
       });
       if (checkBinhLuan) {
-        const userId: any = this.jwtService.decode(token);
+        const userId = this.jwtService.decode(token) as userTokenDecode;
         const checkOwner = await this.prisma.binhLuan.findFirst({
-          where: { ma_nguoi_dung: userId },
+          where: { ma_nguoi_dung: userId.id },
         });
         if (checkOwner) {
           const data = await this.prisma.binhLuan.update({
             where: { id: id },
             data: comment,
           });
-          return successCode(res, data, 'Update binh luan thanh cong', 200);
+          return successCode(res, data, 'Update bình luận thành công', 200);
         } else {
-          throw new HttpException('Không duoc phep binh luan', 403);
+          throw new HttpException('Không được phép bình luận', 403);
         }
       } else {
-        throw new HttpException('Không tìm thấy mã binh luan', 404);
+        throw new HttpException('Không tìm thấy mã bình luận', 404);
       }
     } catch (err) {
       throw new HttpException(err.response, err.status);
@@ -63,15 +64,15 @@ export class BinhLuanService {
         where: { id: id },
       });
       if (checkBookedRoom) {
-        const userId: any = this.jwtService.decode(token);
+        const userId = this.jwtService.decode(token) as userTokenDecode;
         const checkOwner = await this.prisma.binhLuan.findFirst({
-          where: { ma_nguoi_dung: userId },
+          where: { ma_nguoi_dung: userId.id },
         });
         if (checkOwner) {
           await this.prisma.binhLuan.delete({ where: { id: id } });
-          return successCode(res, '', 'Xoá binh luan thành công', 200);
+          return successCode(res, '', 'Xoá bình luận thành công', 200);
         } else {
-          throw new HttpException('Không duoc phep xoa binh luan', 403);
+          throw new HttpException('Không được phép xóa bình luận', 403);
         }
       } else {
         throw new HttpException('Không tìm thấy mã comment', 404);
@@ -80,12 +81,12 @@ export class BinhLuanService {
       throw new HttpException(err.response, err.status);
     }
   }
-  async getBinhLuanById(id:number,res:Response){
+  async getBinhLuanById(id: number, res: Response) {
     try {
       const data = await this.prisma.binhLuan.findMany({
-        where:{ma_phong:id}
-      })
-      return successCode(res, data, 'Lay du lieu thanh cong', 200);
+        where: { ma_phong: id },
+      });
+      return successCode(res, data, 'Lấy dữ liệu thành công', 200);
     } catch (err) {
       throw new HttpException(err.response, err.status);
     }

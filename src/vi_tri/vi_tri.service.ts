@@ -1,9 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, ViTri } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { viTriDto } from './dto/vi_tri.dto';
 import { uploadFileType } from 'src/phong/dto/phong.dto';
+import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
 export class ViTriService {
@@ -12,42 +13,55 @@ export class ViTriService {
   async getViTri(res: Response) {
     try {
       let data = await this.prisma.datPhong.findMany();
-      return successCode(res, data, '', 200);
+      return successCode(res, data, 'Lấy dữ liệu đặt phòng thành công', 200);
     } catch (err) {
       throw new HttpException(err.response, err.status);
     }
   }
-  async postViTri(comment: viTriDto, token: string, res: Response) {
+  async postViTri(viTri: ViTri, token: string, res: Response) {
     try {
-      await this.prisma.binhLuan.create({
-        data: comment,
-      });
-      return successCode(res, comment, 'Binh luan thanh cong', 200);
+      const checkUser = this.jwtService.decode(token) as userTokenDecode;
+      console.log(viTri);
+
+      if (checkUser.role === 'ADMIN') {
+        const data = {
+          ten_vi_tri: viTri.ten_vi_tri,
+          tinh_thanh: viTri.tinh_thanh,
+          quoc_gia: viTri.quoc_gia,
+          hinh_anh: viTri.hinh_anh,
+        };
+        await this.prisma.viTri.create({
+          data: viTri,
+        });
+
+        return successCode(res, data, 'Thêm vị trí thành công', 201);
+      } else {
+        throw new HttpException('Không được phép thêm vị trí', 403);
+      }
     } catch (err) {
+      console.log(err);
+
       throw new HttpException(err.response, err.status);
     }
   }
-  async putViTri(vitri: viTriDto, id: number, token: string, res: Response) {
+  async putViTri(vitri: ViTri, id: number, token: string, res: Response) {
     try {
-      let checkBinhLuan = await this.prisma.binhLuan.findFirst({
+      let checkViTri = await this.prisma.viTri.findFirst({
         where: { id: id },
       });
-      if (checkBinhLuan) {
-        const userId: any = this.jwtService.decode(token);
-        const checkOwner = await this.prisma.binhLuan.findFirst({
-          where: { ma_nguoi_dung: userId },
-        });
-        if (checkOwner) {
-          const data = await this.prisma.binhLuan.update({
+      if (checkViTri) {
+        const user = this.jwtService.decode(token) as userTokenDecode;
+        if (user.role === 'ADMIN') {
+          const data = await this.prisma.viTri.update({
             where: { id: id },
             data: vitri,
           });
-          return successCode(res, data, 'Update binh luan thanh cong', 200);
+          return successCode(res, data, 'Update vị trí thành công', 200);
         } else {
-          throw new HttpException('Không duoc phep binh luan', 403);
+          throw new HttpException('Không được phép thêm vị trí', 403);
         }
       } else {
-        throw new HttpException('Không tìm thấy mã binh luan', 404);
+        throw new HttpException('Không tìm thấy mã vị trí', 404);
       }
     } catch (err) {
       throw new HttpException(err.response, err.status);
@@ -55,24 +69,25 @@ export class ViTriService {
   }
   async deleteViTri(id: number, token: string, res: Response) {
     try {
-      const checkBookedRoom = await this.prisma.binhLuan.findFirst({
+      const checkBookedRoom = await this.prisma.viTri.findFirst({
         where: { id: id },
       });
       if (checkBookedRoom) {
-        const userId: any = this.jwtService.decode(token);
-        const checkOwner = await this.prisma.binhLuan.findFirst({
-          where: { ma_nguoi_dung: userId },
-        });
-        if (checkOwner) {
-          await this.prisma.binhLuan.delete({ where: { id: id } });
-          return successCode(res, '', 'Xoá binh luan thành công', 200);
+        const user = this.jwtService.decode(token) as userTokenDecode;
+        console.log(user);
+
+        if (user.role === 'ADMIN') {
+          await this.prisma.viTri.delete({ where: { id: id } });
+          return successCode(res, '', 'Xoá vị trí thành công', 200);
         } else {
-          throw new HttpException('Không duoc phep xoa binh luan', 403);
+          throw new HttpException('Không được phép xóa vị trí', 403);
         }
       } else {
-        throw new HttpException('Không tìm thấy mã comment', 404);
+        throw new HttpException('Không tìm thấy mã vị trí', 404);
       }
     } catch (err) {
+      console.log(err);
+
       throw new HttpException(err.response, err.status);
     }
   }
@@ -81,7 +96,7 @@ export class ViTriService {
       const data = await this.prisma.binhLuan.findMany({
         where: { ma_phong: id },
       });
-      return successCode(res, data, 'Lay du lieu thanh cong', 200);
+      return successCode(res, data, 'Lấy dữ liệu thành công', 200);
     } catch (err) {
       throw new HttpException(err.response, err.status);
     }
@@ -91,10 +106,49 @@ export class ViTriService {
     pageSize: number,
     keyword: string,
     res: Response,
-  ) {}
+  ) {
+    try {
+      const index = (pageIndex - 1) * pageSize;
+      const data = await this.prisma.viTri.findMany({
+        take: pageSize,
+        skip: index,
+        where: { ten_vi_tri: { contains: `%${keyword}%` } },
+      });
+      return successCode(
+        res,
+        data,
+        'Lấy danh sách vị trí phân trang thành công',
+        200,
+      );
+    } catch (err) {
+      throw new HttpException(err.response, err.status);
+    }
+  }
   async uploadImgViTri(
     file: Express.Multer.File,
     maViTri: number,
+    token: string,
     res: Response,
-  ) {}
+  ) {
+    try {
+      const user = this.jwtService.decode(token) as userTokenDecode;
+      console.log(user);
+
+      if (user.role === 'ADMIN') {
+        const viTri = await this.prisma.viTri.findFirst({
+          where: { id: maViTri },
+        });
+        viTri.hinh_anh = file.filename;
+        await this.prisma.viTri.update({
+          where: { id: maViTri },
+          data: viTri,
+        });
+      } else {
+      }
+
+      return successCode(res, '', 'Upload avatar thành công', 200);
+    } catch (err) {
+      throw new HttpException(err.response, err.status);
+    }
+  }
 }

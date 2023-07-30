@@ -15,7 +15,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { binhLuanDto } from './dto/binh_luan.dto';
 
-@ApiTags('Dat Phong')
+@ApiTags('Binh luan')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Controller('binh-luan')
@@ -29,19 +29,19 @@ export class BinhLuanController {
   postBinhLuan(@Body() comment: binhLuanDto, @Res() res: Response) {
     return this.binhLuanService.postBinhLuan(comment, res);
   }
-  @Put()
+  @Put(':id')
   putBinhLuan(
     @Body() comment: binhLuanDto,
-    @Headers() token: string,
-    @Param() id: string,
+    @Headers('token') token: string,
+    @Param('id') id: string,
     @Res() res: Response,
   ) {
     return this.binhLuanService.putBinhLuan(comment, +id, token, res);
   }
   @Delete(':id')
   deletBinhLuan(
-    @Headers() token: string,
-    @Param() id: string,
+    @Headers('token') token: string,
+    @Param('id') id: string,
     @Res() res: Response,
   ) {
     return this.binhLuanService.deleteBinhLuan(+id, token, res);

@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { datPhongDto } from './dto/dat_phong.dto';
+import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
 export class DatPhongService {
@@ -11,7 +12,12 @@ export class DatPhongService {
   async getBookedRoom(res: Response) {
     try {
       let data = this.prisma.datPhong.findMany();
-      return successCode(res, data, '', 200);
+      return successCode(
+        res,
+        data,
+        'Lấy thông tin phòng đã đặt thành công',
+        200,
+      );
     } catch (err) {
       throw new HttpException(err.response, err.status);
     }
@@ -38,7 +44,7 @@ export class DatPhongService {
       await this.prisma.datPhong.create({
         data: bookedRoom,
       });
-      return successCode(res, bookedRoom, 'Đăng ký thành công', 200);
+      return successCode(res, bookedRoom, 'Đặt phòng thành công', 200);
     } catch (err) {
       console.log(err);
       throw new HttpException(err.response, err.status);

@@ -19,47 +19,53 @@ import { AuthGuard } from '@nestjs/passport';
 import { uploadFileType } from 'src/phong/dto/phong.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { viTriDto } from './dto/vi_tri.dto';
+import { ViTri } from '@prisma/client';
 
-@ApiTags('Dat Phong')
+@ApiTags('Vi tri')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Controller('vi-tri')
 export class ViTriController {
   constructor(private readonly viTriService: ViTriService) {}
   @Get()
-  getViTri(@Res() res: Response) {}
-  @Get()
-  getViTriById(@Param() id: string, @Res() res: Response) {}
+  getViTri(@Res() res: Response) {
+    return this.viTriService.getViTri(res);
+  }
+  @Get(':id')
+  getViTriById(@Param() id: string, @Res() res: Response) {
+    return this.viTriService.getViTriId(+id, res);
+  }
   @Post()
   postViTri(
-    @Body() viTri: any,
-    @Headers() token: string,
+    @Body() viTri: viTriDto,
+    @Headers('token') token: string,
     @Res() res: Response,
   ) {
     return this.viTriService.postViTri(viTri, token, res);
   }
-  @Put()
+  @Put(':id')
   putViTri(
-    @Body() viTri: any,
-    @Headers() token: string,
+    @Body() viTri: viTriDto,
+    @Headers('token') token: string,
     @Res() res: Response,
-    @Param() id: string,
+    @Param('id') id: string,
   ) {
     return this.viTriService.putViTri(viTri, +id, token, res);
   }
-  @Delete()
+  @Delete(':id')
   postDeleteViTri(
-    @Headers() token: string,
-    @Param() id: string,
+    @Headers('token') token: string,
+    @Param('id') id: string,
     @Res() res: Response,
   ) {
     return this.viTriService.deleteViTri(+id, token, res);
   }
   @Get('phan-trang-tim-kiem')
   getViTriPhanTrang(
-    @Query() pageIndex: string,
-    @Query() pageSize: string,
-    @Query() keyword: string,
+    @Query('pageIndex') pageIndex: string,
+    @Query('pageSize') pageSize: string,
+    @Query('keyword') keyword: string,
     @Res() res: Response,
   ) {
     return this.viTriService.getViTriPhanTrang(
@@ -83,10 +89,11 @@ export class ViTriController {
   )
   @Post('/upload-hinh-vitri')
   uploadImgRoom(
+    @Headers('token') token: string,
     @UploadedFile() file: Express.Multer.File,
-    @Query('maPhong') maViTri: string,
+    @Query('maViTri') maViTri: string,
     @Res() res: Response,
   ) {
-    return this.viTriService.uploadImgViTri(file, +maViTri, res);
+    return this.viTriService.uploadImgViTri(file, +maViTri, token, res);
   }
 }

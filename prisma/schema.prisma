@@ -58,7 +58,7 @@ model Phong {
   phong_tam Int?
   mo_ta     String?    @db.VarChar(255)
   gia_tien  Int?
-  may_giat  Boolean?
+  may_giat  Boolean?   @default(false)
   ban_ui    Boolean?
   tivi      Boolean?
   dieu_hoa  Boolean?
@@ -79,7 +79,7 @@ model ViTri {
   id         Int     @id @default(autoincrement())
   ten_vi_tri String? @db.VarChar(255)
   tinh_thanh String? @db.VarChar(150)
-  quoc_gia   Int?
+  quoc_gia   String? @db.VarChar(250)
   hinh_anh   String? @db.VarChar(255)
   Phong      Phong[]
 }
