@@ -38,16 +38,26 @@ export class DatPhongController {
 
   //put update thong tin dat phong
   @Put('/:id')
-  putBookRoomId(@Param('id') id: string, @Res() res: Response) {}
+  putBookRoomId(
+    @Param('id') id: string,
+    @Body() bookedRoom: datPhongDto,
+    @Res() res: Response,
+  ) {
+    return this.datPhongService.putBookRoom(+id, bookedRoom, res);
+  }
 
   //Delete cancel thong tin dat phong
   @Delete('/:id')
-  deleteBookRoom(@Param('id') id: string, @Res() res: Response) {}
+  deleteBookRoom(@Param('id') id: string, @Res() res: Response) {
+    return this.datPhongService.deleteBookRoom(+id, res);
+  }
 
   //Get book room infor by userId
   @Get('/get-booked-room-by-user-id')
   getBookRoomByUserId(
     @Query('maNguoiDung') maNguoiDung: string,
     @Res() res: Response,
-  ) {}
+  ) {
+    return this.datPhongService.getBookRoomByUserId(+maNguoiDung, res);
+  }
 }

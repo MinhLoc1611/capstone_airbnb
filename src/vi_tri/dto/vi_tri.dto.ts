@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-export class datPhongDto {
+export class viTriDto {
   @ApiProperty()
-  ngay_di: Date;
+  id: number;
 
   @ApiProperty()
-  ngay_den: Date;
+  ten_vi_tri: string;
 
   @ApiProperty()
-  so_luong_khach: number;
+  tinh_thanh: string;
 
   @ApiProperty()
-  ma_phong: number;
+  quoc_gia: number;
 
   @ApiProperty()
-  ma_nguoi_dat: number;
+  hinh_anh: string;
 }

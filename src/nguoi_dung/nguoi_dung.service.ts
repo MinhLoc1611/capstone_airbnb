@@ -148,6 +148,7 @@ export class NguoiDungService {
       const user: NguoiDung | any = this.jwtService.decode(
         token.slice(7, token.length),
       );
+
       const getUserById = await this.prisma.nguoiDung.findFirst({
         where: { id: user.id },
       });
