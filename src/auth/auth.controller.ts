@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Headers, Post, Put, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { userLoginType, userRegisterType } from './dto/auth.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,5 +16,14 @@ export class AuthController {
   @Post('/register')
   register(@Body() body: userRegisterType, @Res() res: Response) {
     return this.authService.register(body, res);
+  }
+
+  @Put('/update')
+  update(
+    @Body() body: userRegisterType,
+    @Headers('Authorization') token: string,
+    @Res() res: Response,
+  ) {
+    return this.authService.update(body, token, res);
   }
 }

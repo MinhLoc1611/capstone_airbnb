@@ -23,9 +23,13 @@ export class PhongService {
       const user: NguoiDung | any = this.jwtService.decode(
         token.slice(7, token.length),
       );
-      const newRoom = { ...item, ma_nguoi_dung: user.id };
-      await this.prisma.phong.create({ data: newRoom });
-      return successCode(res, '', 'Tạo phòng thuê thành công', 200);
+      if (user.role === 'ADMIN') {
+        const newRoom = { ...item, ma_nguoi_dung: user.id };
+        await this.prisma.phong.create({ data: newRoom });
+        return successCode(res, '', 'Tạo phòng thuê thành công', 200);
+      } else {
+        throw new HttpException('User không phải quyền ADMIN', 400);
+      }
     } catch (err) {
       throw new HttpException(err.response, err.status);
     }

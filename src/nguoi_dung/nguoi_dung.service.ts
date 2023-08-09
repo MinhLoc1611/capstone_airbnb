@@ -19,38 +19,53 @@ export class NguoiDungService {
     }
   }
 
-  async addUser(userAdd: userAddType, res: Response) {
+  async addUser(userAdd: userAddType, token: string, res: Response) {
     try {
+      const user: NguoiDung | any = this.jwtService.decode(
+        token.slice(7, token.length),
+      );
       const { email, password } = userAdd;
       const checkEmail = await this.prisma.nguoiDung.findFirst({
         where: { email: email },
       });
-      if (checkEmail) {
-        throw new HttpException('email đã tồn tại!', 400);
+      if (user.role === 'ADMIN') {
+        if (checkEmail) {
+          throw new HttpException('email đã tồn tại!', 400);
+        } else {
+          userAdd.password = bcrypt.hashSync(password, 10);
+          const newUser = {
+            ...userAdd,
+            avatar: '',
+          };
+          await this.prisma.nguoiDung.create({ data: newUser });
+          return successCode(res, '', 'Đăng ký thành công', 200);
+        }
       } else {
-        userAdd.password = bcrypt.hashSync(password, 10);
-        const newUser = {
-          ...userAdd,
-          avatar: '',
-        };
-        await this.prisma.nguoiDung.create({ data: newUser });
-        return successCode(res, '', 'Đăng ký thành công', 200);
+        throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
       throw new HttpException(err.response, err.status);
     }
   }
 
-  async deleteUser(userId: number, res: Response) {
+  async deleteUser(userId: number, token: string, res: Response) {
     try {
+      const user: NguoiDung | any = this.jwtService.decode(
+        token.slice(7, token.length),
+      );
+
       const checkUser = await this.prisma.nguoiDung.findFirst({
         where: { id: userId },
       });
-      if (checkUser) {
-        await this.prisma.nguoiDung.delete({ where: { id: userId } });
-        return successCode(res, '', 'Xoá người dùng thành công', 200);
+      if (user.role === 'ADMIN') {
+        if (checkUser) {
+          await this.prisma.nguoiDung.delete({ where: { id: userId } });
+          return successCode(res, '', 'Xoá người dùng thành công', 200);
+        } else {
+          throw new HttpException('Không tìm thấy người dùng', 400);
+        }
       } else {
-        throw new HttpException('Không tìm thấy người dùng', 400);
+        throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
       throw new HttpException(err.response, err.status);
@@ -99,29 +114,41 @@ export class NguoiDungService {
     }
   }
 
-  async updateUser(userUpdate: userAddType, res: Response, id: number) {
+  async updateUser(
+    userUpdate: userAddType,
+    token: string,
+    res: Response,
+    id: number,
+  ) {
     try {
+      const user: NguoiDung | any = this.jwtService.decode(
+        token.slice(7, token.length),
+      );
       const { name, email, phone, birthday, gender, role } = userUpdate;
       const getUser = await this.prisma.nguoiDung.findFirst({
         where: { id: id },
       });
-      if (getUser) {
-        const userUpdate = {
-          ...getUser,
-          name,
-          email,
-          phone,
-          birthday,
-          gender,
-          role,
-        };
-        await this.prisma.nguoiDung.update({
-          where: { id: id },
-          data: userUpdate,
-        });
-        return successCode(res, '', 'update thành công', 200);
+      if (user.role === 'ADMIN') {
+        if (getUser) {
+          const userUpdate = {
+            ...getUser,
+            name,
+            email,
+            phone,
+            birthday,
+            gender,
+            role,
+          };
+          await this.prisma.nguoiDung.update({
+            where: { id: id },
+            data: userUpdate,
+          });
+          return successCode(res, '', 'update thành công', 200);
+        } else {
+          throw new HttpException('Không tìm thấy thông tin người dùng', 400);
+        }
       } else {
-        throw new HttpException('Không tìm thấy thông tin người dùng', 400);
+        throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
       throw new HttpException(err.response, err.status);
@@ -153,13 +180,17 @@ export class NguoiDungService {
         where: { id: user.id },
       });
 
-      getUserById.avatar = file.filename;
+      if (getUserById) {
+        getUserById.avatar = file.filename;
 
-      await this.prisma.nguoiDung.update({
-        data: getUserById,
-        where: { id: user.id },
-      });
-      return successCode(res, '', 'Upload avatar thành công', 200);
+        await this.prisma.nguoiDung.update({
+          data: getUserById,
+          where: { id: user.id },
+        });
+        return successCode(res, '', 'Upload avatar thành công', 200);
+      } else {
+        throw new HttpException('Không tìm thấy thông tin người dùng', 400);
+      }
     } catch (err) {
       throw new HttpException(err.response, err.status);
     }

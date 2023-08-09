@@ -33,13 +33,21 @@ export class NguoiDungController {
   }
 
   @Post()
-  addUser(@Body() userAdd: userAddType, @Res() res: Response) {
-    return this.nguoiDungService.addUser(userAdd, res);
+  addUser(
+    @Body() userAdd: userAddType,
+    @Headers('Authorization') token: string,
+    @Res() res: Response,
+  ) {
+    return this.nguoiDungService.addUser(userAdd, token, res);
   }
 
   @Delete('/:userId')
-  deleteUser(@Param('userId') userId: string, @Res() res: Response) {
-    return this.nguoiDungService.deleteUser(+userId, res);
+  deleteUser(
+    @Param('userId') userId: string,
+    @Headers('Authorization') token: string,
+    @Res() res: Response,
+  ) {
+    return this.nguoiDungService.deleteUser(+userId, token, res);
   }
 
   @Get('/phan-trang-tim-kiem')
@@ -65,10 +73,11 @@ export class NguoiDungController {
   @Put('/:userId')
   updateUser(
     @Body() userUpdate: userAddType,
+    @Headers('Authorization') token: string,
     @Res() res: Response,
     @Param('userId') id: string,
   ) {
-    return this.nguoiDungService.updateUser(userUpdate, res, +id);
+    return this.nguoiDungService.updateUser(userUpdate, token, res, +id);
   }
 
   @Get('/search/:TenNguoiDung')

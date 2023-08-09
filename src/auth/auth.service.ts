@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaClient } from '@prisma/client';
+import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import * as bcrypt from 'bcrypt';
 import { userLoginType, userRegisterType } from './dto/auth.dto';
@@ -61,6 +61,38 @@ export class AuthService {
         };
         await this.prisma.nguoiDung.create({ data: newUser });
         return successCode(res, '', 'Đăng ký thành công', 200);
+      }
+    } catch (err) {
+      throw new HttpException(err.response, err.status);
+    }
+  }
+
+  async update(userUpdate: userRegisterType, token: string, res: Response) {
+    try {
+      const user: NguoiDung | any = this.jwtService.decode(
+        token.slice(7, token.length),
+      );
+
+      const { name, email, phone, birthday, gender } = userUpdate;
+      const getUser = await this.prisma.nguoiDung.findFirst({
+        where: { id: user.id },
+      });
+      if (getUser) {
+        const userUpdate = {
+          ...getUser,
+          name,
+          email,
+          phone,
+          birthday,
+          gender,
+        };
+        await this.prisma.nguoiDung.update({
+          where: { id: user.id },
+          data: userUpdate,
+        });
+        return successCode(res, '', 'update thành công', 200);
+      } else {
+        throw new HttpException('Không tìm thấy thông tin người dùng', 400);
       }
     } catch (err) {
       throw new HttpException(err.response, err.status);
