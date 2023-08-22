@@ -1,20 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BinhLuan } from '@prisma/client';
 export class binhLuanDto {
-  @ApiProperty()
   id: number;
 
   @ApiProperty()
-  maPhong: number;
+  ma_phong: number;
 
   @ApiProperty()
-  maNguoiBinhLuan: number;
+  ma_nguoi_dung: number;
 
   @ApiProperty()
-  ngayBinhLuan: string;
+  ngay_binh_luan: Date;
 
   @ApiProperty()
-  noiDung: string;
+  noi_dung: string;
 
   @ApiProperty()
-  saoBinhLuan: number;
+  sao_binh_luan: number;
 }

@@ -1,8 +1,9 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { datPhongDto } from './dto/dat_phong.dto';
+import e from 'express';
 
 @Injectable()
 export class DatPhongService {
@@ -18,7 +19,7 @@ export class DatPhongService {
         200,
       );
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async getBookedRoomId(id: number, res: Response) {
@@ -35,7 +36,7 @@ export class DatPhongService {
         throw new HttpException('Không tìm thấy thông tin phòng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async postBookRoom(bookedRoom: datPhongDto, res: Response) {
@@ -46,7 +47,7 @@ export class DatPhongService {
       return successCode(res, bookedRoom, 'Đặt phòng thành công', 200);
     } catch (err) {
       console.log(err);
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async putBookRoom(id: number, bookedRoom: datPhongDto, res: Response) {
@@ -64,16 +65,16 @@ export class DatPhongService {
           ngay_di,
           so_luong_khach,
         };
-        await this.prisma.datPhong.update({
+        const data = await this.prisma.datPhong.update({
           where: { id: id },
           data: bookedRoomUpdate,
         });
-        return successCode(res, '', 'update thành công', 200);
+        return successCode(res, data, 'update thành công', 200);
       } else {
         throw new HttpException('Không tìm thấy thông tin phong da dat', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -89,7 +90,7 @@ export class DatPhongService {
         throw new HttpException('Không tìm thấy mã đặt phòng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async getBookRoomByUserId(maNguoiDung: number, res: Response) {
@@ -98,15 +99,16 @@ export class DatPhongService {
         where: { id: maNguoiDung },
       });
       if (checkUser) {
-        await this.prisma.datPhong.findMany({
+        const data = await this.prisma.datPhong.findMany({
           where: { ma_nguoi_dat: maNguoiDung },
         });
-        return successCode(res, '', 'Lấy danh sách thành công', 200);
+        return successCode(res, data, 'Lấy danh sách thành công', 200);
       } else {
         throw new HttpException('Không tìm thấy người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      console.log("1");
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 }

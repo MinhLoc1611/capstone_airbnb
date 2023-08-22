@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient, ViTri } from '@prisma/client';
 import { successCode } from 'src/config/response';
@@ -15,7 +15,7 @@ export class ViTriService {
       const data = await this.prisma.datPhong.findMany();
       return successCode(res, data, 'Lấy dữ liệu đặt phòng thành công', 200);
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async postViTri(viTri: ViTri, token: string, res: Response) {
@@ -41,7 +41,7 @@ export class ViTriService {
     } catch (err) {
       console.log(err);
 
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async putViTri(vitri: ViTri, id: number, token: string, res: Response) {
@@ -64,7 +64,7 @@ export class ViTriService {
         throw new HttpException('Không tìm thấy mã vị trí', 404);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async deleteViTri(id: number, token: string, res: Response) {
@@ -88,7 +88,7 @@ export class ViTriService {
     } catch (err) {
       console.log(err);
 
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async getViTriId(id: number, res: Response) {
@@ -98,7 +98,7 @@ export class ViTriService {
       });
       return successCode(res, data, 'Lấy dữ liệu thành công', 200);
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async getViTriPhanTrang(
@@ -121,7 +121,7 @@ export class ViTriService {
         200,
       );
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async uploadImgViTri(
@@ -148,7 +148,7 @@ export class ViTriService {
 
       return successCode(res, '', 'Upload avatar thành công', 200);
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 }

@@ -1,5 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { binhLuanDto } from './dto/binh_luan.dto';
@@ -14,7 +14,7 @@ export class BinhLuanService {
       const data = await this.prisma.datPhong.findMany();
       return successCode(res, data, '', 200);
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async postBinhLuan(comment: binhLuanDto, res: Response) {
@@ -24,7 +24,9 @@ export class BinhLuanService {
       });
       return successCode(res, comment, 'Binh luan thanh cong', 200);
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      console.log(err);
+      
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async putBinhLuan(
@@ -55,7 +57,7 @@ export class BinhLuanService {
         throw new HttpException('Không tìm thấy mã bình luận', 404);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async deleteBinhLuan(id: number, token: string, res: Response) {
@@ -78,7 +80,7 @@ export class BinhLuanService {
         throw new HttpException('Không tìm thấy mã comment', 404);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
   async getBinhLuanById(id: number, res: Response) {
@@ -88,7 +90,7 @@ export class BinhLuanService {
       });
       return successCode(res, data, 'Lấy dữ liệu thành công', 200);
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 }

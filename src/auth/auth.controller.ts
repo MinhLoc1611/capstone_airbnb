@@ -24,6 +24,6 @@ export class AuthController {
     @Headers('Authorization') token: string,
     @Res() res: Response,
   ) {
-    return this.authService.update(body, token, res);
+    return this.authService.update(token,body, res);
   }
 }

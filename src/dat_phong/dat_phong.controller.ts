@@ -53,9 +53,9 @@ export class DatPhongController {
   }
 
   //Get book room infor by userId
-  @Get('/get-booked-room-by-user-id')
+  @Get('/get-booked-room-by-user-id/:maNguoiDung')
   getBookRoomByUserId(
-    @Query('maNguoiDung') maNguoiDung: string,
+    @Param('maNguoiDung') maNguoiDung: string,
     @Res() res: Response,
   ) {
     return this.datPhongService.getBookRoomByUserId(+maNguoiDung, res);

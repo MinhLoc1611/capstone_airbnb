@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { NguoiDung, PrismaClient } from '@prisma/client';
@@ -11,7 +11,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   prisma = new PrismaClient();
 
@@ -40,7 +40,7 @@ export class AuthService {
         throw new HttpException('email không đúng!', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -63,19 +63,19 @@ export class AuthService {
         return successCode(res, '', 'Đăng ký thành công', 200);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
-  async update(userUpdate: userRegisterType, token: string, res: Response) {
+  async update(token: string, userUpdate: userRegisterType, res: Response) {
     try {
+      console.log(token);
       const user: NguoiDung | any = this.jwtService.decode(
         token.slice(7, token.length),
       );
-
       const { name, email, phone, birthday, gender } = userUpdate;
       const getUser = await this.prisma.nguoiDung.findFirst({
-        where: { id: user.id },
+        where: { id: user?.id },
       });
       if (getUser) {
         const userUpdate = {
@@ -95,7 +95,9 @@ export class AuthService {
         throw new HttpException('Không tìm thấy thông tin người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      console.log(err);
+
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 }

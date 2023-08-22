@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
@@ -15,7 +15,7 @@ export class NguoiDungService {
       const data = await this.prisma.nguoiDung.findMany();
       return successCode(res, data, '', 200);
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -44,7 +44,7 @@ export class NguoiDungService {
         throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -68,7 +68,7 @@ export class NguoiDungService {
         throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -92,7 +92,7 @@ export class NguoiDungService {
         200,
       );
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -110,7 +110,7 @@ export class NguoiDungService {
         throw new HttpException('Không tìm thấy người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -151,7 +151,7 @@ export class NguoiDungService {
         throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -166,7 +166,7 @@ export class NguoiDungService {
         throw new HttpException('Không tìm thấy tên người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -192,7 +192,7 @@ export class NguoiDungService {
         throw new HttpException('Không tìm thấy thông tin người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 }
