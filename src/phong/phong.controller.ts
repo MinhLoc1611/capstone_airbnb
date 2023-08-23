@@ -65,7 +65,7 @@ export class PhongController {
   @UseGuards(AuthGuard('jwt'))
   @Put('/:id')
   updateRoom(
-    @Headers('Authorization') token: string,
+    @Headers('token') token: string,
     @Param('id') id: string,
     @Body() item: roomType,
     @Res() res: Response,
@@ -77,7 +77,7 @@ export class PhongController {
   @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
   deleteRoom(
-    @Headers('Authorization') token: string,
+    @Headers('token') token: string,
     @Param('id') id: string,
     @Res() res: Response,
   ) {
@@ -99,7 +99,7 @@ export class PhongController {
   )
   @Post('/upload-hinh-phong')
   uploadImgRoom(
-    @Headers('Authorization') token: string,
+    @Headers('token') token: string,
     @Query('maPhong') maPhong: string,
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,

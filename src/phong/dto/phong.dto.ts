@@ -48,9 +48,6 @@ export class roomType {
 
   @ApiProperty()
   ma_vi_tri: number;
-
-  @ApiProperty()
-  ma_nguoi_dung: number;
 }
 
 export class uploadFileType {

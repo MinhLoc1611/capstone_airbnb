@@ -20,10 +20,10 @@ export class AuthController {
 
   @Put('/update')
   update(
+    @Headers('token') token: string,
     @Body() body: userRegisterType,
-    @Headers('Authorization') token: string,
     @Res() res: Response,
   ) {
-    return this.authService.update(token,body, res);
+    return this.authService.update(token, body, res);
   }
 }

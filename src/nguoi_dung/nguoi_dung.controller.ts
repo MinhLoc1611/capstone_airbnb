@@ -35,7 +35,7 @@ export class NguoiDungController {
   @Post()
   addUser(
     @Body() userAdd: userAddType,
-    @Headers('Authorization') token: string,
+    @Headers('token') token: string,
     @Res() res: Response,
   ) {
     return this.nguoiDungService.addUser(userAdd, token, res);
@@ -44,7 +44,7 @@ export class NguoiDungController {
   @Delete('/:userId')
   deleteUser(
     @Param('userId') userId: string,
-    @Headers('Authorization') token: string,
+    @Headers('token') token: string,
     @Res() res: Response,
   ) {
     return this.nguoiDungService.deleteUser(+userId, token, res);
@@ -73,7 +73,7 @@ export class NguoiDungController {
   @Put('/:userId')
   updateUser(
     @Body() userUpdate: userAddType,
-    @Headers('Authorization') token: string,
+    @Headers('token') token: string,
     @Res() res: Response,
     @Param('userId') id: string,
   ) {

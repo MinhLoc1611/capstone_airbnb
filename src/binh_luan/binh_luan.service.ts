@@ -1,5 +1,9 @@
 import { JwtService } from '@nestjs/jwt';
-import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { binhLuanDto } from './dto/binh_luan.dto';
@@ -25,7 +29,7 @@ export class BinhLuanService {
       return successCode(res, comment, 'Binh luan thanh cong', 200);
     } catch (err) {
       console.log(err);
-      
+
       throw new InternalServerErrorException('Internal Server Error');
     }
   }
