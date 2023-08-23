@@ -18,11 +18,9 @@ export class ViTriService {
       throw new InternalServerErrorException('Internal Server Error');
     }
   }
-  async postViTri(viTri: ViTri, token: string, res: Response) {
+  async postViTri(viTri: viTriDto, token: string, res: Response) {
     try {
       const checkUser = this.jwtService.decode(token) as userTokenDecode;
-      console.log(viTri);
-
       if (checkUser.role === 'ADMIN') {
         const data = {
           ten_vi_tri: viTri.ten_vi_tri,
@@ -44,7 +42,7 @@ export class ViTriService {
       throw new InternalServerErrorException('Internal Server Error');
     }
   }
-  async putViTri(vitri: ViTri, id: number, token: string, res: Response) {
+  async putViTri(vitri: viTriDto, id: number, token: string, res: Response) {
     try {
       const checkViTri = await this.prisma.viTri.findFirst({
         where: { id: id },
