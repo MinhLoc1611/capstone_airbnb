@@ -38,7 +38,7 @@ export class ViTriController {
   }
   @Post()
   postViTri(
-    @Body() viTri: ViTri,
+    @Body() viTri: viTriDto,
     @Headers('token') token: string,
     @Res() res: Response,
   ) {
@@ -46,7 +46,7 @@ export class ViTriController {
   }
   @Put(':id')
   putViTri(
-    @Body() viTri: ViTri,
+    @Body() viTri: viTriDto,
     @Headers('token') token: string,
     @Res() res: Response,
     @Param('id') id: string,

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 export class viTriDto {
-  @ApiProperty()
   id: number;
 
   @ApiProperty()
@@ -10,7 +9,7 @@ export class viTriDto {
   tinh_thanh: string;
 
   @ApiProperty()
-  quoc_gia: number;
+  quoc_gia: string;
 
   @ApiProperty()
   hinh_anh: string;
