@@ -8,7 +8,6 @@ import {
   UseGuards,
   Put,
   Delete,
-  Query,
 } from '@nestjs/common';
 import { DatPhongService } from './dat_phong.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';

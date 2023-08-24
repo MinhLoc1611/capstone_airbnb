@@ -1,9 +1,12 @@
-import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { datPhongDto } from './dto/dat_phong.dto';
-import e from 'express';
 
 @Injectable()
 export class DatPhongService {
@@ -107,7 +110,7 @@ export class DatPhongService {
         throw new HttpException('Không tìm thấy người dùng', 400);
       }
     } catch (err) {
-      console.log("1");
+      console.log('1');
       throw new InternalServerErrorException('Internal Server Error');
     }
   }

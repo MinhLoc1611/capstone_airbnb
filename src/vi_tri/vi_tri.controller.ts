@@ -20,7 +20,6 @@ import { uploadFileType } from 'src/phong/dto/phong.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { viTriDto } from './dto/vi_tri.dto';
-import { ViTri } from '@prisma/client';
 
 @ApiTags('Vi tri')
 @ApiBearerAuth()

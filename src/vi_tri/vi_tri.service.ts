@@ -1,9 +1,12 @@
-import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaClient, ViTri } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { viTriDto } from './dto/vi_tri.dto';
-import { uploadFileType } from 'src/phong/dto/phong.dto';
 import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
