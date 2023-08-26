@@ -98,13 +98,55 @@ CREATE TABLE `ViTri` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `BinhLuan` (`id`, `noi_dung`, `sao_binh_luan`, `ngay_binh_luan`, `ma_nguoi_dung`, `ma_phong`) VALUES
+(1, 'Phong dep', 5, '2023-08-26 14:52:04', 1, 1);
+INSERT INTO `BinhLuan` (`id`, `noi_dung`, `sao_binh_luan`, `ngay_binh_luan`, `ma_nguoi_dung`, `ma_phong`) VALUES
+(4, 'Nice', 5, '2023-08-26 14:52:04', 3, 3);
+INSERT INTO `BinhLuan` (`id`, `noi_dung`, `sao_binh_luan`, `ngay_binh_luan`, `ma_nguoi_dung`, `ma_phong`) VALUES
+(5, 'Nice', 4, '2023-08-26 14:52:04', 4, 3);
+INSERT INTO `BinhLuan` (`id`, `noi_dung`, `sao_binh_luan`, `ngay_binh_luan`, `ma_nguoi_dung`, `ma_phong`) VALUES
+(6, 'Nice', 4, '2023-08-26 14:52:04', 4, 2),
+(7, 'Ok nice', 5, '2023-08-26 14:52:04', 5, 4),
+(8, 'Ok nice', 5, '2023-08-26 14:52:04', 5, 5),
+(9, 'Ok nice', 5, '2023-08-26 14:52:04', 5, 6);
+
+INSERT INTO `DatPhong` (`id`, `ngay_den`, `ngay_di`, `so_luong_khach`, `ma_phong`, `ma_nguoi_dat`) VALUES
+(1, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 2, 1, 1);
+INSERT INTO `DatPhong` (`id`, `ngay_den`, `ngay_di`, `so_luong_khach`, `ma_phong`, `ma_nguoi_dat`) VALUES
+(3, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 2, 1, 3);
+INSERT INTO `DatPhong` (`id`, `ngay_den`, `ngay_di`, `so_luong_khach`, `ma_phong`, `ma_nguoi_dat`) VALUES
+(4, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 2, 2, 4);
+INSERT INTO `DatPhong` (`id`, `ngay_den`, `ngay_di`, `so_luong_khach`, `ma_phong`, `ma_nguoi_dat`) VALUES
+(5, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 2, 5, 4),
+(6, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 2, 7, 4),
+(7, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 2, 7, 6),
+(8, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 2, 8, 7),
+(9, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 2, 8, 9),
+(10, '2023-08-26 14:54:50', '2023-08-26 14:54:50', 4, 4, 1);
+
 INSERT INTO `NguoiDung` (`id`, `name`, `email`, `password`, `phone`, `birthday`, `gender`, `role`, `avatar`) VALUES
 (1, 'admin123', 'admin@gmail.com', '123456', '12345678', '01/01/2023', 1, 'ADMIN', NULL);
+INSERT INTO `NguoiDung` (`id`, `name`, `email`, `password`, `phone`, `birthday`, `gender`, `role`, `avatar`) VALUES
+(3, 'User1', 'user1@example.com', 'user123', '987654321', '1990-05-15', 0, 'USER', NULL);
+INSERT INTO `NguoiDung` (`id`, `name`, `email`, `password`, `phone`, `birthday`, `gender`, `role`, `avatar`) VALUES
+(4, 'User2', 'user2@example.com', 'user456', '123456789', '1985-09-23', 1, 'USER', NULL);
+INSERT INTO `NguoiDung` (`id`, `name`, `email`, `password`, `phone`, `birthday`, `gender`, `role`, `avatar`) VALUES
+(5, 'User3', 'user3@example.com', 'user789', '555555555', '2000-02-10', 0, 'USER', NULL),
+(6, 'User4', 'user4@example.com', 'userabc', '777777777', '1998-11-30', 1, 'USER', NULL),
+(7, 'User5', 'user5@example.com', 'userdef', '444444444', '1993-07-08', 0, 'USER', NULL),
+(8, 'User6', 'user6@example.com', 'userxyz', '666666666', '1995-04-20', 1, 'USER', NULL),
+(9, 'User7', 'user7@example.com', 'user123', '222222222', '1987-12-18', 1, 'USER', NULL),
+(10, 'User8', 'user8@example.com', 'user456', '888888888', '1989-03-25', 0, 'USER', NULL),
+(11, 'User9', 'user9@example.com', 'user789', '333333333', '2001-08-05', 1, 'USER', NULL),
+(12, 'User10', 'user10@example.com', 'userabc', '111111111', '1997-06-12', 0, 'USER', NULL);
 
 INSERT INTO `Phong` (`id`, `ten_phong`, `khach`, `phong_ngu`, `giuong`, `phong_tam`, `mo_ta`, `gia_tien`, `may_giat`, `ban_ui`, `tivi`, `dieu_hoa`, `wifi`, `bep`, `do_xe`, `ho_boi`, `hinh_anh`, `ma_vi_tri`, `ma_nguoi_dung`) VALUES
-(1, 'NewApt D1 - Cozy studio - NU apt - 500m Bui Vien!', 2, 1, 1, 1, 'string', 28, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 1, 1),
-(2, 'STUDIO MỚI NETFLIX MIỄN PHÍ/ĐỖ XE MIỄN PHÍ', 2, 1, 1, 1, 'string', 21, 1, 1, 1, 1, 1, 1, 1, 0, NULL, 1, 1),
-(3, 'Phòng sang trọng với ban công tại D.1 - 200m đến Bitexco', 2, 1, 1, 1, 'string', 17, 1, 1, 1, 1, 1, 0, 1, 1, NULL, 1, 1),
+(1, 'NewApt D1 - Cozy studio - NU apt - 500m Bui Vien!', 2, 1, 1, 1, 'string', 28, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 1, 1);
+INSERT INTO `Phong` (`id`, `ten_phong`, `khach`, `phong_ngu`, `giuong`, `phong_tam`, `mo_ta`, `gia_tien`, `may_giat`, `ban_ui`, `tivi`, `dieu_hoa`, `wifi`, `bep`, `do_xe`, `ho_boi`, `hinh_anh`, `ma_vi_tri`, `ma_nguoi_dung`) VALUES
+(2, 'STUDIO MỚI NETFLIX MIỄN PHÍ/ĐỖ XE MIỄN PHÍ', 2, 1, 1, 1, 'string', 21, 1, 1, 1, 1, 1, 1, 1, 0, NULL, 1, 1);
+INSERT INTO `Phong` (`id`, `ten_phong`, `khach`, `phong_ngu`, `giuong`, `phong_tam`, `mo_ta`, `gia_tien`, `may_giat`, `ban_ui`, `tivi`, `dieu_hoa`, `wifi`, `bep`, `do_xe`, `ho_boi`, `hinh_anh`, `ma_vi_tri`, `ma_nguoi_dung`) VALUES
+(3, 'Phòng sang trọng với ban công tại D.1 - 200m đến Bitexco', 2, 1, 1, 1, 'string', 17, 1, 1, 1, 1, 1, 0, 1, 1, NULL, 1, 1);
+INSERT INTO `Phong` (`id`, `ten_phong`, `khach`, `phong_ngu`, `giuong`, `phong_tam`, `mo_ta`, `gia_tien`, `may_giat`, `ban_ui`, `tivi`, `dieu_hoa`, `wifi`, `bep`, `do_xe`, `ho_boi`, `hinh_anh`, `ma_vi_tri`, `ma_nguoi_dung`) VALUES
 (4, 'Closer home!!!!', 4, 2, 2, 2, 'string', 28, 1, 1, 1, 1, 1, 0, 1, 0, NULL, 2, 1),
 (5, 'Toàn bộ quê hương phải của Gi ngay trung tâm Cần Thơ', 4, 2, 2, 2, 'string', 25, 1, 1, 1, 1, 1, 0, 1, 0, NULL, 2, 1),
 (6, 'Ngôi nhà có hoa, nắng đẹp, trung tâm Cần Thơ', 4, 1, 2, 2, 'string', 21, 1, 1, 1, 1, 1, 1, 1, 0, NULL, 2, 1),
@@ -118,14 +160,16 @@ INSERT INTO `Phong` (`id`, `ten_phong`, `khach`, `phong_ngu`, `giuong`, `phong_t
 (14, 'Căn hộ hiện đại độc đáo của Scandinavia', 2, 1, 1, 1, 'string', 17, 0, 1, 1, 1, 1, 0, 1, 0, NULL, 7, 1);
 
 INSERT INTO `ViTri` (`id`, `ten_vi_tri`, `tinh_thanh`, `quoc_gia`, `hinh_anh`) VALUES
-(1, 'Quận 1', 'Hồ Chí Minh', 'Việt Nam', NULL),
-(2, 'Cái Răng', 'Cần Thơ', 'Việt Nam', NULL),
-(3, 'Nha Trang', 'Khánh Hoà', 'Việt Nam', NULL),
+(1, 'Quận 1', 'Hồ Chí Minh', 'Việt Nam', NULL);
+INSERT INTO `ViTri` (`id`, `ten_vi_tri`, `tinh_thanh`, `quoc_gia`, `hinh_anh`) VALUES
+(2, 'Cái Răng', 'Cần Thơ', 'Việt Nam', NULL);
+INSERT INTO `ViTri` (`id`, `ten_vi_tri`, `tinh_thanh`, `quoc_gia`, `hinh_anh`) VALUES
+(3, 'Nha Trang', 'Khánh Hoà', 'Việt Nam', NULL);
+INSERT INTO `ViTri` (`id`, `ten_vi_tri`, `tinh_thanh`, `quoc_gia`, `hinh_anh`) VALUES
 (4, 'Hoàn Kiếm', 'Hà Nội', 'Việt Nam', NULL),
 (5, 'Hải Châu', 'Đà Nẵng', 'Việt Nam', NULL),
 (6, 'Langbiang', 'Đà Lạt', 'Việt Nam', NULL),
 (7, 'Mũi Né', 'Phan Thiết', 'Việt Nam', NULL);
-
 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
