@@ -1,10 +1,10 @@
 -- -------------------------------------------------------------
--- TablePlus 5.3.8(500)
+-- TablePlus 5.4.0(504)
 --
 -- https://tableplus.com/
 --
 -- Database: db_airbnb
--- Generation Time: 2023-07-16 20:57:51.3520
+-- Generation Time: 2023-08-26 20:47:03.8350
 -- -------------------------------------------------------------
 
 
@@ -31,8 +31,8 @@ CREATE TABLE `BinhLuan` (
   PRIMARY KEY (`id`),
   KEY `ma_nguoi_dung` (`ma_nguoi_dung`),
   KEY `ma_phong` (`ma_phong`),
-  CONSTRAINT `BinhLuan_ibfk_1` FOREIGN KEY (`ma_nguoi_dung`) REFERENCES `NguoiDung` (`id`),
-  CONSTRAINT `BinhLuan_ibfk_2` FOREIGN KEY (`ma_phong`) REFERENCES `Phong` (`id`)
+  CONSTRAINT `BinhLuan_ibfk_1` FOREIGN KEY (`ma_nguoi_dung`) REFERENCES `NguoiDung` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `BinhLuan_ibfk_2` FOREIGN KEY (`ma_phong`) REFERENCES `Phong` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `DatPhong` (
@@ -45,8 +45,8 @@ CREATE TABLE `DatPhong` (
   PRIMARY KEY (`id`),
   KEY `ma_nguoi_dat` (`ma_nguoi_dat`),
   KEY `ma_phong` (`ma_phong`),
-  CONSTRAINT `DatPhong_ibfk_1` FOREIGN KEY (`ma_nguoi_dat`) REFERENCES `NguoiDung` (`id`),
-  CONSTRAINT `DatPhong_ibfk_2` FOREIGN KEY (`ma_phong`) REFERENCES `Phong` (`id`)
+  CONSTRAINT `DatPhong_ibfk_1` FOREIGN KEY (`ma_nguoi_dat`) REFERENCES `NguoiDung` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `DatPhong_ibfk_2` FOREIGN KEY (`ma_phong`) REFERENCES `Phong` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `NguoiDung` (
@@ -60,7 +60,7 @@ CREATE TABLE `NguoiDung` (
   `role` varchar(100) DEFAULT NULL,
   `avatar` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `Phong` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -85,9 +85,9 @@ CREATE TABLE `Phong` (
   PRIMARY KEY (`id`),
   KEY `ma_vi_tri` (`ma_vi_tri`),
   KEY `ma_nguoi_dung` (`ma_nguoi_dung`),
-  CONSTRAINT `Phong_ibfk_1` FOREIGN KEY (`ma_vi_tri`) REFERENCES `ViTri` (`id`),
-  CONSTRAINT `Phong_ibfk_2` FOREIGN KEY (`ma_nguoi_dung`) REFERENCES `NguoiDung` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `Phong_ibfk_1` FOREIGN KEY (`ma_vi_tri`) REFERENCES `ViTri` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `Phong_ibfk_2` FOREIGN KEY (`ma_nguoi_dung`) REFERENCES `NguoiDung` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `ViTri` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -96,7 +96,35 @@ CREATE TABLE `ViTri` (
   `quoc_gia` varchar(150) DEFAULT NULL,
   `hinh_anh` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `NguoiDung` (`id`, `name`, `email`, `password`, `phone`, `birthday`, `gender`, `role`, `avatar`) VALUES
+(1, 'admin123', 'admin@gmail.com', '123456', '12345678', '01/01/2023', 1, 'ADMIN', NULL);
+
+INSERT INTO `Phong` (`id`, `ten_phong`, `khach`, `phong_ngu`, `giuong`, `phong_tam`, `mo_ta`, `gia_tien`, `may_giat`, `ban_ui`, `tivi`, `dieu_hoa`, `wifi`, `bep`, `do_xe`, `ho_boi`, `hinh_anh`, `ma_vi_tri`, `ma_nguoi_dung`) VALUES
+(1, 'NewApt D1 - Cozy studio - NU apt - 500m Bui Vien!', 2, 1, 1, 1, 'string', 28, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 1, 1),
+(2, 'STUDIO MỚI NETFLIX MIỄN PHÍ/ĐỖ XE MIỄN PHÍ', 2, 1, 1, 1, 'string', 21, 1, 1, 1, 1, 1, 1, 1, 0, NULL, 1, 1),
+(3, 'Phòng sang trọng với ban công tại D.1 - 200m đến Bitexco', 2, 1, 1, 1, 'string', 17, 1, 1, 1, 1, 1, 0, 1, 1, NULL, 1, 1),
+(4, 'Closer home!!!!', 4, 2, 2, 2, 'string', 28, 1, 1, 1, 1, 1, 0, 1, 0, NULL, 2, 1),
+(5, 'Toàn bộ quê hương phải của Gi ngay trung tâm Cần Thơ', 4, 2, 2, 2, 'string', 25, 1, 1, 1, 1, 1, 0, 1, 0, NULL, 2, 1),
+(6, 'Ngôi nhà có hoa, nắng đẹp, trung tâm Cần Thơ', 4, 1, 2, 2, 'string', 21, 1, 1, 1, 1, 1, 1, 1, 0, NULL, 2, 1),
+(7, 'Near Hon Chong-Quiet Seaview Studio to beach', 2, 1, 1, 1, 'string', 10, 1, 1, 1, 1, 1, 0, 1, 0, NULL, 3, 1),
+(8, 'Tầng 25 Căn hộ 1 phòng ngủ ấm cúng và hiện đại', 4, 1, 2, 1, 'string', 15, 0, 0, 1, 1, 1, 0, 1, 0, NULL, 3, 1),
+(9, 'Căn hộ mặt tiền Economy Beach với chế độ ngắm bình minh', 4, 1, 2, 1, 'string', 18, 0, 1, 1, 1, 1, 0, 1, 0, NULL, 3, 1),
+(10, 'Hanoi Old Quarter Homestay - Unique Railway View', 2, 1, 1, 1, 'string', 23, 1, 1, 1, 1, 1, 1, 1, 0, NULL, 4, 1),
+(11, 'Studio mới, thang máy, Hoàn Kiếm, gần khu phố cổ', 2, 1, 1, 1, 'string', 15, 1, 1, 1, 1, 1, 0, 1, 0, NULL, 4, 1),
+(12, 'Fisherman homestay (phòng 2 người - B)', 2, 1, 1, 1, 'string', 15, 1, 1, 1, 1, 1, 0, 1, 1, NULL, 5, 1),
+(13, 'Studio mới & ấm cúng | Riverside | Bên cạnh Cầu Hàn', 2, 1, 1, 1, 'string', 13, 0, 1, 1, 1, 1, 0, 1, 0, NULL, 6, 1),
+(14, 'Căn hộ hiện đại độc đáo của Scandinavia', 2, 1, 1, 1, 'string', 17, 0, 1, 1, 1, 1, 0, 1, 0, NULL, 7, 1);
+
+INSERT INTO `ViTri` (`id`, `ten_vi_tri`, `tinh_thanh`, `quoc_gia`, `hinh_anh`) VALUES
+(1, 'Quận 1', 'Hồ Chí Minh', 'Việt Nam', NULL),
+(2, 'Cái Răng', 'Cần Thơ', 'Việt Nam', NULL),
+(3, 'Nha Trang', 'Khánh Hoà', 'Việt Nam', NULL),
+(4, 'Hoàn Kiếm', 'Hà Nội', 'Việt Nam', NULL),
+(5, 'Hải Châu', 'Đà Nẵng', 'Việt Nam', NULL),
+(6, 'Langbiang', 'Đà Lạt', 'Việt Nam', NULL),
+(7, 'Mũi Né', 'Phan Thiết', 'Việt Nam', NULL);
 
 
 
