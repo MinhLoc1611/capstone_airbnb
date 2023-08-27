@@ -26,13 +26,13 @@ import { viTriDto } from './dto/vi_tri.dto';
 @UseGuards(AuthGuard('jwt'))
 @Controller('vi-tri')
 export class ViTriController {
-  constructor(private readonly viTriService: ViTriService) {}
+  constructor(private readonly viTriService: ViTriService) { }
   @Get()
   getViTri(@Res() res: Response) {
     return this.viTriService.getViTri(res);
   }
   @Get(':id')
-  getViTriById(@Param() id: string, @Res() res: Response) {
+  getViTriById(@Param('id') id: string, @Res() res: Response) {
     return this.viTriService.getViTriId(+id, res);
   }
   @Post()
