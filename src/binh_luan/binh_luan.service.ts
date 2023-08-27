@@ -15,10 +15,14 @@ export class BinhLuanService {
   prisma = new PrismaClient();
   async getBinhLuan(res: Response) {
     try {
-      const data = await this.prisma.datPhong.findMany();
+      const data = await this.prisma.binhLuan.findMany();
       return successCode(res, data, '', 200);
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async postBinhLuan(comment: binhLuanDto, res: Response) {
@@ -28,9 +32,11 @@ export class BinhLuanService {
       });
       return successCode(res, comment, 'Binh luan thanh cong', 200);
     } catch (err) {
-      console.log(err);
-
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async putBinhLuan(
@@ -61,7 +67,11 @@ export class BinhLuanService {
         throw new HttpException('Không tìm thấy mã bình luận', 404);
       }
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async deleteBinhLuan(id: number, token: string, res: Response) {
@@ -84,7 +94,11 @@ export class BinhLuanService {
         throw new HttpException('Không tìm thấy mã comment', 404);
       }
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async getBinhLuanById(id: number, res: Response) {
@@ -94,7 +108,11 @@ export class BinhLuanService {
       });
       return successCode(res, data, 'Lấy dữ liệu thành công', 200);
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 }

@@ -8,6 +8,7 @@ import {
   UseGuards,
   Put,
   Delete,
+  Headers,
 } from '@nestjs/common';
 import { DatPhongService } from './dat_phong.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -41,14 +42,15 @@ export class DatPhongController {
     @Param('id') id: string,
     @Body() bookedRoom: datPhongDto,
     @Res() res: Response,
+    @Headers('token') token:string
   ) {
-    return this.datPhongService.putBookRoom(+id, bookedRoom, res);
+    return this.datPhongService.putBookRoom(+id, bookedRoom, res,token);
   }
 
   //Delete cancel thong tin dat phong
   @Delete('/:id')
-  deleteBookRoom(@Param('id') id: string, @Res() res: Response) {
-    return this.datPhongService.deleteBookRoom(+id, res);
+  deleteBookRoom(@Param('id') id: string, @Res() res: Response,@Headers('token') token:string) {
+    return this.datPhongService.deleteBookRoom(+id, res,token);
   }
 
   //Get book room infor by userId

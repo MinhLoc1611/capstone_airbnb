@@ -15,10 +15,14 @@ export class ViTriService {
   prisma = new PrismaClient();
   async getViTri(res: Response) {
     try {
-      const data = await this.prisma.datPhong.findMany();
+      const data = await this.prisma.viTri.findMany();
       return successCode(res, data, 'Lấy dữ liệu đặt phòng thành công', 200);
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async postViTri(viTri: viTriDto, token: string, res: Response) {
@@ -65,7 +69,11 @@ export class ViTriService {
         throw new HttpException('Không tìm thấy mã vị trí', 404);
       }
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async deleteViTri(id: number, token: string, res: Response) {
@@ -99,7 +107,11 @@ export class ViTriService {
       });
       return successCode(res, data, 'Lấy dữ liệu thành công', 200);
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async getViTriPhanTrang(
@@ -122,7 +134,11 @@ export class ViTriService {
         200,
       );
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async uploadImgViTri(
@@ -147,9 +163,13 @@ export class ViTriService {
       } else {
       }
 
-      return successCode(res, '', 'Upload avatar thành công', 200);
+      return successCode(res, '', 'Upload hình vị trí thành công', 200);
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 }

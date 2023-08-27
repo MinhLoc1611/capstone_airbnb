@@ -18,7 +18,11 @@ export class PhongService {
       const data = await this.prisma.phong.findMany();
       return successCode(res, data, 'Lấy danh sách phòng thuê thành công', 200);
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -35,7 +39,11 @@ export class PhongService {
         throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -55,7 +63,11 @@ export class PhongService {
         throw new HttpException('Không có phòng thuê ở vị trí tìm kiếm', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -79,7 +91,11 @@ export class PhongService {
         200,
       );
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -97,7 +113,11 @@ export class PhongService {
         throw new HttpException('Không tìm thấy thông tin phòng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -131,7 +151,11 @@ export class PhongService {
         throw new HttpException('Không tìm thấy phòng thuê', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -159,7 +183,11 @@ export class PhongService {
         throw new HttpException('Không tìm thấy phòng thuê', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -194,7 +222,11 @@ export class PhongService {
         throw new HttpException('Không tìm thấy phòng thuê', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 }

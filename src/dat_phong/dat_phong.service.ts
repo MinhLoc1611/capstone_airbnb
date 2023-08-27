@@ -4,17 +4,17 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaClient } from '@prisma/client';
+import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { datPhongDto } from './dto/dat_phong.dto';
 
 @Injectable()
 export class DatPhongService {
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService) { }
   prisma = new PrismaClient();
   async getBookedRoom(res: Response) {
     try {
-      const data = this.prisma.datPhong.findMany();
+      const data = await this.prisma.datPhong.findMany();
       return successCode(
         res,
         data,
@@ -22,12 +22,16 @@ export class DatPhongService {
         200,
       );
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async getBookedRoomId(id: number, res: Response) {
     try {
-      const data = await this.prisma.phong.findFirst({ where: { id: id } });
+      const data = await this.prisma.datPhong.findFirst({ where: { ma_phong: id } });
       if (data) {
         return successCode(
           res,
@@ -39,7 +43,11 @@ export class DatPhongService {
         throw new HttpException('Không tìm thấy thông tin phòng', 400);
       }
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async postBookRoom(bookedRoom: datPhongDto, res: Response) {
@@ -49,51 +57,72 @@ export class DatPhongService {
       });
       return successCode(res, bookedRoom, 'Đặt phòng thành công', 200);
     } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
-  async putBookRoom(id: number, bookedRoom: datPhongDto, res: Response) {
+  async putBookRoom(id: number, bookedRoom: datPhongDto, res: Response, token: string) {
     try {
       const { ma_nguoi_dat, ma_phong, ngay_den, ngay_di, so_luong_khach } =
         bookedRoom;
-      const getBookedRoom = await this.prisma.nguoiDung.findFirst({
+      const user: NguoiDung | any = await this.jwtService.decode(token.slice(7, token.length))
+      const getBookedRoom = await this.prisma.datPhong.findFirst({
         where: { id: id },
       });
-      if (getBookedRoom) {
-        const bookedRoomUpdate = {
-          ma_nguoi_dat,
-          ma_phong,
-          ngay_den,
-          ngay_di,
-          so_luong_khach,
-        };
-        const data = await this.prisma.datPhong.update({
-          where: { id: id },
-          data: bookedRoomUpdate,
-        });
-        return successCode(res, data, 'update thành công', 200);
+      if (user.id === getBookedRoom.ma_nguoi_dat) {
+        if (getBookedRoom) {
+          const bookedRoomUpdate = {
+            ma_nguoi_dat,
+            ma_phong,
+            ngay_den,
+            ngay_di,
+            so_luong_khach,
+          };
+          const data = await this.prisma.datPhong.update({
+            where: { id: id },
+            data: bookedRoomUpdate,
+          });
+          return successCode(res, data, 'update thành công', 200);
+        } else {
+          throw new HttpException('Không tìm thấy thông tin phong da dat', 400);
+        }
       } else {
-        throw new HttpException('Không tìm thấy thông tin phong da dat', 400);
+        throw new HttpException('Không được quyền chỉnh sửa', 403);
       }
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
-
-  async deleteBookRoom(id: number, res: Response) {
+  async deleteBookRoom(id: number, res: Response, token: string) {
     try {
       const checkBookedRoom = await this.prisma.datPhong.findFirst({
         where: { id: id },
       });
-      if (checkBookedRoom) {
-        await this.prisma.datPhong.delete({ where: { id: id } });
-        return successCode(res, '', 'Xoá đặt phòng thành công', 200);
+      const user: NguoiDung | any = await this.jwtService.decode(token.slice(7, token.length))
+      if (user.id === checkBookedRoom.ma_nguoi_dat) {
+        if (checkBookedRoom) {
+          await this.prisma.datPhong.delete({ where: { id: id } });
+          return successCode(res, '', 'Xoá đặt phòng thành công', 200);
+        } else {
+          throw new HttpException('Không tìm thấy mã đặt phòng', 400);
+        }
       } else {
-        throw new HttpException('Không tìm thấy mã đặt phòng', 400);
+        throw new HttpException('Không được quyền xóa', 403);
       }
+
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
   async getBookRoomByUserId(maNguoiDung: number, res: Response) {
@@ -110,8 +139,11 @@ export class DatPhongService {
         throw new HttpException('Không tìm thấy người dùng', 400);
       }
     } catch (err) {
-      console.log('1');
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 }

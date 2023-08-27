@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { NguoiDung, PrismaClient } from '@prisma/client';
@@ -40,7 +40,11 @@ export class AuthService {
         throw new HttpException('email không đúng!', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -63,7 +67,11 @@ export class AuthService {
         return successCode(res, '', 'Đăng ký thành công', 200);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -94,7 +102,11 @@ export class AuthService {
         throw new HttpException('Không tìm thấy thông tin người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 }

@@ -19,7 +19,11 @@ export class NguoiDungService {
       const data = await this.prisma.nguoiDung.findMany();
       return successCode(res, data, '', 200);
     } catch (err) {
-      throw new InternalServerErrorException('Internal Server Error');
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -48,7 +52,11 @@ export class NguoiDungService {
         throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -72,7 +80,11 @@ export class NguoiDungService {
         throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -96,7 +108,11 @@ export class NguoiDungService {
         200,
       );
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -114,7 +130,11 @@ export class NguoiDungService {
         throw new HttpException('Không tìm thấy người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -155,7 +175,11 @@ export class NguoiDungService {
         throw new HttpException('User không phải quyền ADMIN', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -170,7 +194,11 @@ export class NguoiDungService {
         throw new HttpException('Không tìm thấy tên người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 
@@ -196,7 +224,11 @@ export class NguoiDungService {
         throw new HttpException('Không tìm thấy thông tin người dùng', 400);
       }
     } catch (err) {
-      throw new HttpException(err.response, err.status);
+      if (err.status === 400 || err.status === 403) {
+        throw err
+      }else{
+        throw new InternalServerErrorException('Internal Server Error');
+      }
     }
   }
 }

@@ -20,7 +20,7 @@ import { binhLuanDto } from './dto/binh_luan.dto';
 @UseGuards(AuthGuard('jwt'))
 @Controller('binh-luan')
 export class BinhLuanController {
-  constructor(private readonly binhLuanService: BinhLuanService) {}
+  constructor(private readonly binhLuanService: BinhLuanService) { }
   @Get()
   getBinhLuan(@Res() res: Response) {
     return this.binhLuanService.getBinhLuan(res);
@@ -47,7 +47,7 @@ export class BinhLuanController {
     return this.binhLuanService.deleteBinhLuan(+id, token, res);
   }
   @Get('lay-binh-luan-theo-ma-phong/:maPhong')
-  getBinhLuanByRoomId(@Param() maPhong: string, @Res() res: Response) {
+  getBinhLuanByRoomId(@Param('maPhong') maPhong: string, @Res() res: Response) {
     return this.binhLuanService.getBinhLuanById(+maPhong, res);
   }
 }
