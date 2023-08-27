@@ -31,7 +31,7 @@ export class DatPhongService {
   }
   async getBookedRoomId(id: number, res: Response) {
     try {
-      const data = await this.prisma.datPhong.findFirst({ where: { ma_phong: id } });
+      const data = await this.prisma.datPhong.findMany({ where: { ma_phong: id } });
       if (data) {
         return successCode(
           res,
@@ -68,10 +68,13 @@ export class DatPhongService {
     try {
       const { ma_nguoi_dat, ma_phong, ngay_den, ngay_di, so_luong_khach } =
         bookedRoom;
-      const user: NguoiDung | any = await this.jwtService.decode(token.slice(7, token.length))
+      const user: NguoiDung | any =  this.jwtService.decode(token.slice(7, token.length))
       const getBookedRoom = await this.prisma.datPhong.findFirst({
         where: { id: id },
       });
+      console.log(user.id);
+      console.log(getBookedRoom.ma_nguoi_dat);
+      
       if (user.id === getBookedRoom.ma_nguoi_dat) {
         if (getBookedRoom) {
           const bookedRoomUpdate = {

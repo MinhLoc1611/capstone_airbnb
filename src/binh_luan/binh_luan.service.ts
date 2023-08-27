@@ -4,14 +4,13 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { binhLuanDto } from './dto/binh_luan.dto';
-import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
 export class BinhLuanService {
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService) { }
   prisma = new PrismaClient();
   async getBinhLuan(res: Response) {
     try {
@@ -20,7 +19,7 @@ export class BinhLuanService {
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err
-      }else{
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -34,7 +33,7 @@ export class BinhLuanService {
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err
-      }else{
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -50,7 +49,7 @@ export class BinhLuanService {
         where: { id: id },
       });
       if (checkBinhLuan) {
-        const userId = this.jwtService.decode(token) as userTokenDecode;
+        const userId: NguoiDung | any = this.jwtService.decode(token.slice(7, token.length))
         const checkOwner = await this.prisma.binhLuan.findFirst({
           where: { ma_nguoi_dung: userId.id },
         });
@@ -69,7 +68,7 @@ export class BinhLuanService {
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err
-      }else{
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -80,7 +79,7 @@ export class BinhLuanService {
         where: { id: id },
       });
       if (checkBookedRoom) {
-        const userId = this.jwtService.decode(token) as userTokenDecode;
+        const userId: NguoiDung | any = this.jwtService.decode(token.slice(7, token.length))
         const checkOwner = await this.prisma.binhLuan.findFirst({
           where: { ma_nguoi_dung: userId.id },
         });
@@ -96,7 +95,7 @@ export class BinhLuanService {
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err
-      }else{
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -110,7 +109,7 @@ export class BinhLuanService {
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err
-      }else{
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }

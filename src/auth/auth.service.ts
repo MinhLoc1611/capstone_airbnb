@@ -11,7 +11,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   prisma = new PrismaClient();
 
@@ -42,7 +42,7 @@ export class AuthService {
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err
-      }else{
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -69,7 +69,7 @@ export class AuthService {
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err
-      }else{
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -80,31 +80,37 @@ export class AuthService {
       const user: NguoiDung | any = this.jwtService.decode(
         token.slice(7, token.length),
       );
-      const { name, email, phone, birthday, gender } = body;
-      const getUser = await this.prisma.nguoiDung.findFirst({
-        where: { id: user.id },
-      });
-      if (getUser) {
-        const userUpdate = {
-          ...getUser,
-          name,
-          email,
-          phone,
-          birthday,
-          gender,
-        };
-        await this.prisma.nguoiDung.update({
-          where: { id: user.id },
-          data: userUpdate,
-        });
-        return successCode(res, '', 'update thành công', 200);
-      } else {
-        throw new HttpException('Không tìm thấy thông tin người dùng', 400);
+      if (!user) {
+        throw new HttpException('Token không hợp lệ', 400);
       }
+      else {
+        const { name, email, phone, birthday, gender } = body;
+        const getUser = await this.prisma.nguoiDung.findFirst({
+          where: { id: user.id },
+        });
+        if (getUser) {
+          const userUpdate = {
+            ...getUser,
+            name,
+            email,
+            phone,
+            birthday,
+            gender,
+          };
+          await this.prisma.nguoiDung.update({
+            where: { id: user.id },
+            data: userUpdate,
+          });
+          return successCode(res, '', 'update thành công', 200);
+        } else {
+          throw new HttpException('Không tìm thấy thông tin người dùng', 400);
+        }
+      }
+
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err
-      }else{
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
