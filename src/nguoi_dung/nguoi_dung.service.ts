@@ -90,24 +90,43 @@ export class NguoiDungService {
   }
 
   async getUserPage(
-    pageNumber: number | null,
+    pageNumber: number,
     pageSize: number,
     keyword: string,
     res: Response,
   ) {
     try {
       const index = (pageNumber - 1) * pageSize;
-      const data = await this.prisma.nguoiDung.findMany({
-        take: pageSize,
-        skip: index,
-        where: { name: { contains: `%${keyword}%` } },
-      });
-      return successCode(
-        res,
-        data,
-        'Lấy danh sách người dùng phân trang thành công',
-        200,
-      );
+      if (!keyword) {
+        const data = await this.prisma.nguoiDung.findMany({
+          take: pageSize,
+          skip: index,
+        });
+        const total = await this.prisma.nguoiDung.count();
+        const list = { data: data, pageNumber, pageSize, total };
+        return successCode(
+          res,
+          list,
+          'Lấy danh sách người dùng phân trang thành công',
+          200,
+        );
+      } else {
+        const data = await this.prisma.nguoiDung.findMany({
+          take: pageSize,
+          skip: index,
+          where: { name: { contains: `%${keyword}%` } },
+        });
+        const total = await this.prisma.nguoiDung.count({
+          where: { name: { contains: `%${keyword}%` } },
+        });
+        const list = { data: data, pageNumber, pageSize, total };
+        return successCode(
+          res,
+          list,
+          'Lấy danh sách người dùng phân trang thành công',
+          200,
+        );
+      }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err;

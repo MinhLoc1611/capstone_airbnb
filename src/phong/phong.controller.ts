@@ -16,7 +16,13 @@ import {
 import { PhongService } from './phong.service';
 import { roomType, uploadFileType } from './dto/phong.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
@@ -46,6 +52,10 @@ export class PhongController {
     return this.phongService.getRoomByViTri(+maViTri, res);
   }
 
+  @ApiQuery({
+    name: 'keyword',
+    required: false,
+  })
   @Get('/phan-trang-tim-kiem')
   getRoomPage(
     @Query('pageNumber') pageNumber: string,

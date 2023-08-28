@@ -14,7 +14,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ViTriService } from './vi_tri.service';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { uploadFileType } from 'src/phong/dto/phong.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -60,6 +66,11 @@ export class ViTriController {
   ) {
     return this.viTriService.deleteViTri(+id, token, res);
   }
+
+  @ApiQuery({
+    name: 'keyword',
+    required: false,
+  })
   @Get('phan-trang-tim-kiem')
   getViTriPhanTrang(
     @Query('pageIndex') pageIndex: string,

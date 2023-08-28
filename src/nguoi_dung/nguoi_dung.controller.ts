@@ -14,7 +14,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { NguoiDungService } from './nguoi_dung.service';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FileUploadDto, userAddType } from './dto/nguoi_dung.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -50,6 +56,10 @@ export class NguoiDungController {
     return this.nguoiDungService.deleteUser(+userId, token, res);
   }
 
+  @ApiQuery({
+    name: 'keyword',
+    required: false,
+  })
   @Get('/phan-trang-tim-kiem')
   getUserPage(
     @Query('pageNumber') pageNumber: string,

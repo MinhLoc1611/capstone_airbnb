@@ -80,17 +80,36 @@ export class PhongService {
   ) {
     try {
       const index = (pageNumber - 1) * pageSize;
-      const data = await this.prisma.phong.findMany({
-        take: pageSize,
-        skip: index,
-        where: { ten_phong: { contains: `%${keyword}%` } },
-      });
-      return successCode(
-        res,
-        data,
-        'Lấy danh sách phòng phân trang thành công',
-        200,
-      );
+      if (!keyword) {
+        const data = await this.prisma.phong.findMany({
+          take: pageSize,
+          skip: index,
+        });
+        const total = await this.prisma.phong.count();
+        const list = { data: data, pageNumber, pageSize, total };
+        return successCode(
+          res,
+          list,
+          'Lấy danh sách phòng phân trang thành công',
+          200,
+        );
+      } else {
+        const data = await this.prisma.phong.findMany({
+          take: pageSize,
+          skip: index,
+          where: { ten_phong: { contains: `%${keyword}%` } },
+        });
+        const total = await this.prisma.phong.count({
+          where: { ten_phong: { contains: `%${keyword}%` } },
+        });
+        const list = { data: data, pageNumber, pageSize, total };
+        return successCode(
+          res,
+          list,
+          'Lấy danh sách phòng phân trang thành công',
+          200,
+        );
+      }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err;

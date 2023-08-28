@@ -126,17 +126,36 @@ export class ViTriService {
   ) {
     try {
       const index = (pageIndex - 1) * pageSize;
-      const data = await this.prisma.viTri.findMany({
-        take: pageSize,
-        skip: index,
-        where: { ten_vi_tri: { contains: `%${keyword}%` } },
-      });
-      return successCode(
-        res,
-        data,
-        'Lấy danh sách vị trí phân trang thành công',
-        200,
-      );
+      if (!keyword) {
+        const data = await this.prisma.viTri.findMany({
+          take: pageSize,
+          skip: index,
+        });
+        const total = await this.prisma.viTri.count();
+        const list = { data: data, pageIndex, pageSize, total };
+        return successCode(
+          res,
+          list,
+          'Lấy danh sách vị trí phân trang thành công',
+          200,
+        );
+      } else {
+        const data = await this.prisma.viTri.findMany({
+          take: pageSize,
+          skip: index,
+          where: { ten_vi_tri: { contains: `%${keyword}%` } },
+        });
+        const total = await this.prisma.viTri.count({
+          where: { ten_vi_tri: { contains: `%${keyword}%` } },
+        });
+        const list = { data: data, pageIndex, pageSize, total };
+        return successCode(
+          res,
+          list,
+          'Lấy danh sách vị trí phân trang thành công',
+          200,
+        );
+      }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err;
