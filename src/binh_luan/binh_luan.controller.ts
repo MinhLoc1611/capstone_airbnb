@@ -20,7 +20,7 @@ import { binhLuanDto } from './dto/binh_luan.dto';
 @UseGuards(AuthGuard('jwt'))
 @Controller('binh-luan')
 export class BinhLuanController {
-  constructor(private readonly binhLuanService: BinhLuanService) { }
+  constructor(private readonly binhLuanService: BinhLuanService) {}
   @Get()
   getBinhLuan(@Res() res: Response) {
     return this.binhLuanService.getBinhLuan(res);

@@ -7,10 +7,11 @@ import { JwtService } from '@nestjs/jwt';
 import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { datPhongDto } from './dto/dat_phong.dto';
+import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
 export class DatPhongService {
-  constructor(private jwtService: JwtService) { }
+  constructor(private jwtService: JwtService) {}
   prisma = new PrismaClient();
   async getBookedRoom(res: Response) {
     try {
@@ -23,15 +24,17 @@ export class DatPhongService {
       );
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
   }
   async getBookedRoomId(id: number, res: Response) {
     try {
-      const data = await this.prisma.datPhong.findFirst({ where: { ma_phong: id } });
+      const data = await this.prisma.datPhong.findFirst({
+        where: { ma_phong: id },
+      });
       if (data) {
         return successCode(
           res,
@@ -44,8 +47,8 @@ export class DatPhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -58,17 +61,24 @@ export class DatPhongService {
       return successCode(res, bookedRoom, 'Đặt phòng thành công', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
   }
-  async putBookRoom(id: number, bookedRoom: datPhongDto, res: Response, token: string) {
+  async putBookRoom(
+    id: number,
+    bookedRoom: datPhongDto,
+    res: Response,
+    token: string,
+  ) {
     try {
       const { ma_nguoi_dat, ma_phong, ngay_den, ngay_di, so_luong_khach } =
         bookedRoom;
-      const user: NguoiDung | any = await this.jwtService.decode(token.slice(7, token.length))
+      const user: NguoiDung | any = this.jwtService.decode(
+        token,
+      ) as userTokenDecode;
       const getBookedRoom = await this.prisma.datPhong.findFirst({
         where: { id: id },
       });
@@ -94,8 +104,8 @@ export class DatPhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -105,7 +115,9 @@ export class DatPhongService {
       const checkBookedRoom = await this.prisma.datPhong.findFirst({
         where: { id: id },
       });
-      const user: NguoiDung | any = await this.jwtService.decode(token.slice(7, token.length))
+      const user: NguoiDung | any = this.jwtService.decode(
+        token,
+      ) as userTokenDecode;
       if (user.id === checkBookedRoom.ma_nguoi_dat) {
         if (checkBookedRoom) {
           await this.prisma.datPhong.delete({ where: { id: id } });
@@ -116,11 +128,10 @@ export class DatPhongService {
       } else {
         throw new HttpException('Không được quyền xóa', 403);
       }
-
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -140,8 +151,8 @@ export class DatPhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }

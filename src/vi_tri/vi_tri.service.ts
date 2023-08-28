@@ -19,8 +19,8 @@ export class ViTriService {
       return successCode(res, data, 'Lấy dữ liệu đặt phòng thành công', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -70,8 +70,8 @@ export class ViTriService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -108,8 +108,8 @@ export class ViTriService {
       return successCode(res, data, 'Lấy dữ liệu thành công', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -135,8 +135,8 @@ export class ViTriService {
       );
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -149,7 +149,6 @@ export class ViTriService {
   ) {
     try {
       const user = this.jwtService.decode(token) as userTokenDecode;
-      console.log(user);
 
       if (user.role === 'ADMIN') {
         const viTri = await this.prisma.viTri.findFirst({
@@ -166,8 +165,8 @@ export class ViTriService {
       return successCode(res, '', 'Upload hình vị trí thành công', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }

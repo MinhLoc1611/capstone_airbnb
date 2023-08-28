@@ -1,10 +1,15 @@
-import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import * as bcrypt from 'bcrypt';
 import { userLoginType, userRegisterType } from './dto/auth.dto';
+import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
 export class AuthService {
@@ -41,8 +46,8 @@ export class AuthService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -68,8 +73,8 @@ export class AuthService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -78,8 +83,8 @@ export class AuthService {
   async update(token: string, body: userRegisterType, res: Response) {
     try {
       const user: NguoiDung | any = this.jwtService.decode(
-        token.slice(7, token.length),
-      );
+        token,
+      ) as userTokenDecode;
       const { name, email, phone, birthday, gender } = body;
       const getUser = await this.prisma.nguoiDung.findFirst({
         where: { id: user.id },
@@ -103,8 +108,8 @@ export class AuthService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }

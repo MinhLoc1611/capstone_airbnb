@@ -19,8 +19,8 @@ export class BinhLuanService {
       return successCode(res, data, '', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -33,8 +33,8 @@ export class BinhLuanService {
       return successCode(res, comment, 'Binh luan thanh cong', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -50,7 +50,9 @@ export class BinhLuanService {
         where: { id: id },
       });
       if (checkBinhLuan) {
-        const userId = this.jwtService.decode(token) as userTokenDecode;
+        const userId = this.jwtService.decode(
+          token.slice(7, token.length),
+        ) as userTokenDecode;
         const checkOwner = await this.prisma.binhLuan.findFirst({
           where: { ma_nguoi_dung: userId.id },
         });
@@ -68,8 +70,8 @@ export class BinhLuanService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -95,8 +97,8 @@ export class BinhLuanService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -109,8 +111,8 @@ export class BinhLuanService {
       return successCode(res, data, 'Lấy dữ liệu thành công', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }

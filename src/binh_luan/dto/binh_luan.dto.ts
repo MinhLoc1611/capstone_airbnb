@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BinhLuan } from '@prisma/client';
 export class binhLuanDto {
   id: number;
 

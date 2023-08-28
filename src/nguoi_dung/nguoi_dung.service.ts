@@ -8,6 +8,7 @@ import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import * as bcrypt from 'bcrypt';
 import { userAddType } from './dto/nguoi_dung.dto';
+import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
 export class NguoiDungService {
@@ -20,8 +21,8 @@ export class NguoiDungService {
       return successCode(res, data, '', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -30,8 +31,8 @@ export class NguoiDungService {
   async addUser(userAdd: userAddType, token: string, res: Response) {
     try {
       const user: NguoiDung | any = this.jwtService.decode(
-        token.slice(7, token.length),
-      );
+        token,
+      ) as userTokenDecode;
       const { email, password } = userAdd;
       const checkEmail = await this.prisma.nguoiDung.findFirst({
         where: { email: email },
@@ -53,8 +54,8 @@ export class NguoiDungService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -63,8 +64,8 @@ export class NguoiDungService {
   async deleteUser(userId: number, token: string, res: Response) {
     try {
       const user: NguoiDung | any = this.jwtService.decode(
-        token.slice(7, token.length),
-      );
+        token,
+      ) as userTokenDecode;
 
       const checkUser = await this.prisma.nguoiDung.findFirst({
         where: { id: userId },
@@ -81,8 +82,8 @@ export class NguoiDungService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -109,8 +110,8 @@ export class NguoiDungService {
       );
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -131,8 +132,8 @@ export class NguoiDungService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -146,8 +147,8 @@ export class NguoiDungService {
   ) {
     try {
       const user: NguoiDung | any = this.jwtService.decode(
-        token.slice(7, token.length),
-      );
+        token,
+      ) as userTokenDecode;
       const { name, email, phone, birthday, gender, role } = userUpdate;
       const getUser = await this.prisma.nguoiDung.findFirst({
         where: { id: id },
@@ -176,8 +177,8 @@ export class NguoiDungService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -195,8 +196,8 @@ export class NguoiDungService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -205,8 +206,8 @@ export class NguoiDungService {
   async uploadAvatar(file: Express.Multer.File, token: string, res: Response) {
     try {
       const user: NguoiDung | any = this.jwtService.decode(
-        token.slice(7, token.length),
-      );
+        token,
+      ) as userTokenDecode;
 
       const getUserById = await this.prisma.nguoiDung.findFirst({
         where: { id: user.id },
@@ -225,8 +226,8 @@ export class NguoiDungService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }

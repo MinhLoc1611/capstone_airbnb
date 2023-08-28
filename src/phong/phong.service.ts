@@ -7,6 +7,7 @@ import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { roomType } from './dto/phong.dto';
 import { JwtService } from '@nestjs/jwt';
+import { userTokenDecode } from 'src/config/tokenType';
 
 @Injectable()
 export class PhongService {
@@ -19,8 +20,8 @@ export class PhongService {
       return successCode(res, data, 'Lấy danh sách phòng thuê thành công', 200);
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -29,8 +30,8 @@ export class PhongService {
   async createRoom(token: string, item: roomType, res: Response) {
     try {
       const user: NguoiDung | any = this.jwtService.decode(
-        token.slice(7, token.length),
-      );
+        token,
+      ) as userTokenDecode;
       if (user.role === 'ADMIN') {
         const newRoom = { ...item, ma_nguoi_dung: user.id };
         await this.prisma.phong.create({ data: newRoom });
@@ -40,8 +41,8 @@ export class PhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -64,8 +65,8 @@ export class PhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -92,8 +93,8 @@ export class PhongService {
       );
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -114,8 +115,8 @@ export class PhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -128,8 +129,8 @@ export class PhongService {
       });
       if (checkRoom) {
         const user: NguoiDung | any = this.jwtService.decode(
-          token.slice(7, token.length),
-        );
+          token,
+        ) as userTokenDecode;
         if (checkRoom.ma_nguoi_dung === user.id) {
           const updateRoom = {
             ...item,
@@ -152,8 +153,8 @@ export class PhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -166,8 +167,8 @@ export class PhongService {
       });
       if (checkRoom) {
         const user: NguoiDung | any = this.jwtService.decode(
-          token.slice(7, token.length),
-        );
+          token,
+        ) as userTokenDecode;
         if (checkRoom.ma_nguoi_dung === user.id) {
           await this.prisma.phong.delete({
             where: { id: id },
@@ -184,8 +185,8 @@ export class PhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
@@ -203,8 +204,8 @@ export class PhongService {
       });
       if (checkRoom) {
         const user: NguoiDung | any = this.jwtService.decode(
-          token.slice(7, token.length),
-        );
+          token,
+        ) as userTokenDecode;
         if (checkRoom.ma_nguoi_dung === user.id) {
           checkRoom.hinh_anh = file.filename;
           await this.prisma.phong.update({
@@ -223,8 +224,8 @@ export class PhongService {
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
-        throw err
-      }else{
+        throw err;
+      } else {
         throw new InternalServerErrorException('Internal Server Error');
       }
     }
