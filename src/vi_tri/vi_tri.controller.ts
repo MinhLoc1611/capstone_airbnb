@@ -32,7 +32,7 @@ export class ViTriController {
     return this.viTriService.getViTri(res);
   }
   @Get(':id')
-  getViTriById(@Param() id: string, @Res() res: Response) {
+  getViTriById(@Param('id') id: string, @Res() res: Response) {
     return this.viTriService.getViTriId(+id, res);
   }
   @Post()

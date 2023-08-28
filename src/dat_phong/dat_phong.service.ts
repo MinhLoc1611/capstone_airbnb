@@ -82,6 +82,9 @@ export class DatPhongService {
       const getBookedRoom = await this.prisma.datPhong.findFirst({
         where: { id: id },
       });
+      console.log(user.id);
+      console.log(getBookedRoom.ma_nguoi_dat);
+
       if (user.id === getBookedRoom.ma_nguoi_dat) {
         if (getBookedRoom) {
           const bookedRoomUpdate = {

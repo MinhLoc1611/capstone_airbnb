@@ -4,7 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { NguoiDung, PrismaClient } from '@prisma/client';
 import { successCode } from 'src/config/response';
 import { binhLuanDto } from './dto/binh_luan.dto';
 import { userTokenDecode } from 'src/config/tokenType';
@@ -50,9 +50,7 @@ export class BinhLuanService {
         where: { id: id },
       });
       if (checkBinhLuan) {
-        const userId = this.jwtService.decode(
-          token.slice(7, token.length),
-        ) as userTokenDecode;
+        const userId = this.jwtService.decode(token) as userTokenDecode;
         const checkOwner = await this.prisma.binhLuan.findFirst({
           where: { ma_nguoi_dung: userId.id },
         });
@@ -82,7 +80,9 @@ export class BinhLuanService {
         where: { id: id },
       });
       if (checkBookedRoom) {
-        const userId = this.jwtService.decode(token) as userTokenDecode;
+        const userId: NguoiDung | any = this.jwtService.decode(
+          token,
+        ) as userTokenDecode;
         const checkOwner = await this.prisma.binhLuan.findFirst({
           where: { ma_nguoi_dung: userId.id },
         });
