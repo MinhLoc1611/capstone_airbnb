@@ -31,8 +31,8 @@ export class DatPhongController {
     return this.datPhongService.postBookRoom(bookedRoom, res);
   }
   // get list room by book ID
-  @Get('/:id')
-  getBookedRoomId(@Param('id') id: string, @Res() res: Response) {
+  @Get('/:maPhong')
+  getBookedRoomId(@Param('maPhong') id: string, @Res() res: Response) {
     return this.datPhongService.getBookedRoomId(+id, res);
   }
 

@@ -90,7 +90,7 @@ export class NguoiDungService {
   }
 
   async getUserPage(
-    pageNumber: number,
+    pageNumber: number | null,
     pageSize: number,
     keyword: string,
     res: Response,

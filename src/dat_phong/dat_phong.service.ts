@@ -32,10 +32,10 @@ export class DatPhongService {
   }
   async getBookedRoomId(id: number, res: Response) {
     try {
-      const data = await this.prisma.datPhong.findFirst({
+      const data = await this.prisma.datPhong.findMany({
         where: { ma_phong: id },
       });
-      if (data) {
+      if (data.length > 0) {
         return successCode(
           res,
           data,
@@ -43,7 +43,7 @@ export class DatPhongService {
           200,
         );
       } else {
-        throw new HttpException('Không tìm thấy thông tin phòng', 400);
+        throw new HttpException('Không tìm thấy thông tin đặt phòng', 400);
       }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {

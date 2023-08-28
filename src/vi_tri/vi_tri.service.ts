@@ -102,10 +102,14 @@ export class ViTriService {
   }
   async getViTriId(id: number, res: Response) {
     try {
-      const data = await this.prisma.binhLuan.findMany({
-        where: { ma_phong: id },
+      const data = await this.prisma.viTri.findFirst({
+        where: { id: id },
       });
-      return successCode(res, data, 'Lấy dữ liệu thành công', 200);
+      if (data) {
+        return successCode(res, data, 'Lấy dữ liệu thành công', 200);
+      } else {
+        throw new HttpException('Không tìm thấy thông tin vị trí', 400);
+      }
     } catch (err) {
       if (err.status === 400 || err.status === 403) {
         throw err;
